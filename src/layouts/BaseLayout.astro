@@ -1,0 +1,94 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import AuroraBackground from '../components/effects/AuroraBackground.astro';
+import CosmicWarpBackground from '../components/effects/CosmicWarpBackground.astro';
+import CursorSpotlight from '../components/effects/CursorSpotlight.astro';
+import ClickShockwave from '../components/effects/ClickShockwave.astro';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+}
+
+const {
+  title,
+  description = 'Personal tech universe of Đặng Danh - AI Engineering, Software Development & Creative Computing.',
+  image = '/images/og-default.svg',
+  type = 'website'
+} = Astro.props;
+
+const siteTitle = title ? `${title} | Đặng Danh` : 'Đặng Danh | Software Engineer & AI Researcher';
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const socialImageURL = new URL(image, Astro.site);
+---
+
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="canonical" href={canonicalURL} />
+    <meta name="generator" content={Astro.generator} />
+
+    <!-- Primary Meta Tags -->
+    <title>{siteTitle}</title>
+    <meta name="title" content={siteTitle} />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#03050c" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content={type} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={socialImageURL} />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={canonicalURL} />
+    <meta property="twitter:title" content={siteTitle} />
+    <meta property="twitter:description" content={description} />
+    <meta property="twitter:image" content={socialImageURL} />
+
+    <!-- Premium Modern Typography: Outfit & Be Vietnam Pro (Flawless Vietnamese Support) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Silky Smooth Client-Side Router & View Transitions -->
+    <ClientRouter />
+  </head>
+
+  <body>
+    <!-- Multi-Layer Dynamic Background System -->
+    <AuroraBackground />
+    <CosmicWarpBackground />
+    <CursorSpotlight />
+    <ClickShockwave />
+
+    <!-- Navigation Header -->
+    <Header />
+
+    <!-- Main Content Area with View Transition Animation -->
+    <main id="main-content" class="main-wrapper" transition:animate="fade">
+      <slot />
+    </main>
+
+    <!-- Footer -->
+    <Footer />
+  </body>
+</html>
+
+<style>
+  .main-wrapper {
+    flex: 1;
+    position: relative;
+    z-index: 10;
+  }
+</style>

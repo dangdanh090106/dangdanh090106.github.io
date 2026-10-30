@@ -1,0 +1,110 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AnimatedGrid from '../components/effects/AnimatedGrid.astro';
+---
+
+<BaseLayout title="404 - Signal Lost" description="Không tìm thấy trang yêu cầu trong không gian mạng.">
+  <div class="error-container">
+    <AnimatedGrid />
+
+    <div class="container error-content">
+      <div class="error-card glass-card">
+        <span class="cyber-badge status-warning">
+          <span class="error-dot"></span> 404 ERROR // SECTOR NOT FOUND
+        </span>
+
+        <h1 class="error-code">4<span class="neon-cyan">0</span>4</h1>
+        <h2 class="error-title">Mất tín hiệu kết nối</h2>
+        <p class="error-desc">
+          Tọa độ không gian số bạn đang tìm kiếm không tồn tại hoặc đã được di chuyển sang một phân vùng khác.
+        </p>
+
+        <div class="error-actions">
+          <a href="/" class="cyber-button primary">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>Trở về Trang chủ</span>
+          </a>
+
+          <a href="/posts/" class="cyber-button secondary">
+            <span>Đến kho bài viết</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .error-container {
+    position: relative;
+    min-height: 75vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-4xl) 0;
+  }
+
+  .error-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+  }
+
+  .error-card {
+    max-width: 580px;
+    width: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-3xl) var(--space-2xl);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    box-shadow: 0 0 35px rgba(245, 158, 11, 0.1);
+  }
+
+  .error-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #f59e0b;
+    box-shadow: 0 0 8px #f59e0b;
+  }
+
+  .error-code {
+    font-family: var(--font-mono);
+    font-size: clamp(5rem, 12vw, 8rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    color: var(--text-primary);
+  }
+
+  .neon-cyan {
+    color: var(--accent-cyan);
+    text-shadow: var(--glow-cyan);
+  }
+
+  .error-title {
+    font-size: 1.8rem;
+  }
+
+  .error-desc {
+    font-size: 1.05rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    max-width: 440px;
+  }
+
+  .error-actions {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: var(--space-md);
+  }
+</style>

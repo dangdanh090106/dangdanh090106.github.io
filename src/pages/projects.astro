@@ -1,0 +1,191 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+
+const allProjects = await getCollection('projects');
+const projects = allProjects.sort((a, b) => a.data.order - b.data.order);
+
+const categories = ['Tất cả', 'AI / ML', 'Web Apps', 'Dev Tools', 'Open Source'];
+---
+
+<BaseLayout title="Projects" description="Bộ sưu tập các dự án phần mềm, mô hình AI và công cụ kỹ thuật số của Đặng Danh.">
+  <div class="container projects-container">
+    <header class="projects-header">
+      <span class="cyber-badge">SHOWCASE KỸ THUẬT</span>
+      <h1 class="page-title">Sản Phẩm & <span class="neon-gradient-text">Dự Án Nghiên Cứu</span></h1>
+      <p class="page-subtitle">
+        Tập hợp các giải pháp từ mô hình AI, ứng dụng web đến các công cụ dòng lệnh mã nguồn mở. Tất cả được xây dựng với tư duy kỹ thuật bền vững và hiệu năng cao.
+      </p>
+    </header>
+
+    <!-- Category Filter Bar -->
+    <div class="filter-bar">
+      {categories.map((cat, idx) => (
+        <button
+          class={`filter-tab ${idx === 0 ? 'active' : ''}`}
+          data-category={cat === 'Tất cả' ? 'all' : cat}
+        >
+          {cat}
+        </button>
+      ))}
+    </div>
+
+    <!-- Projects Grid -->
+    <div id="projects-grid" class="projects-grid">
+      {projects.map((project) => (
+        <div class="project-wrapper" data-category={project.data.category}>
+          <ProjectCard
+            title={project.data.title}
+            description={project.data.description}
+            category={project.data.category}
+            tags={project.data.tags}
+            cover={project.data.cover}
+            github={project.data.github}
+            demo={project.data.demo}
+            status={project.data.status}
+            featured={project.data.featured}
+          />
+        </div>
+      ))}
+    </div>
+
+    <!-- GitHub Callout -->
+    <div class="github-callout glass-card">
+      <div class="callout-content">
+        <h3>Khám phá thêm trên GitHub</h3>
+        <p>Còn nhiều repository thử nghiệm, scripts tự động và các đóng góp mã nguồn mở khác.</p>
+      </div>
+      <a href="https://github.com/dangdanh090106" target="_blank" rel="noopener noreferrer" class="cyber-button primary">
+        <span>Ghé thăm GitHub Profile</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+          <polyline points="15 3 21 3 21 9"></polyline>
+          <line x1="10" y1="14" x2="21" y2="3"></line>
+        </svg>
+      </a>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .projects-container {
+    padding-top: var(--space-3xl);
+    padding-bottom: var(--space-4xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xl);
+  }
+
+  .projects-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    max-width: 720px;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.3rem, 4.5vw, 3.4rem);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+  }
+
+  .page-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* Filter Tabs */
+  .filter-bar {
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: var(--space-md);
+  }
+
+  .filter-tab {
+    font-family: var(--font-sans);
+    font-size: 0.92rem;
+    font-weight: 500;
+    padding: 0.5rem 1.1rem;
+    border-radius: var(--radius-md);
+    background: transparent;
+    border: 1px solid transparent;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--duration-fast);
+  }
+
+  .filter-tab:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .filter-tab.active {
+    color: #fff;
+    background: rgba(69, 230, 255, 0.12);
+    border-color: rgba(69, 230, 255, 0.3);
+    box-shadow: var(--glow-cyan-sm);
+  }
+
+  /* Grid */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: var(--space-xl);
+  }
+
+  /* GitHub Callout */
+  .github-callout {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-xl);
+    padding: var(--space-2xl);
+    background: linear-gradient(135deg, rgba(16, 24, 39, 0.7) 0%, rgba(20, 32, 54, 0.6) 100%);
+    border: 1px solid rgba(69, 230, 255, 0.2);
+    flex-wrap: wrap;
+  }
+
+  .callout-content h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .callout-content p {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+  }
+</style>
+
+<script>
+  function setupProjectFilter() {
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    const projectItems = document.querySelectorAll('.project-wrapper') as NodeListOf<HTMLElement>;
+
+    filterTabs.forEach((tab) => {
+      tab.addEventListener('click', () => {
+        filterTabs.forEach((t) => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        const selectedCat = tab.getAttribute('data-category');
+
+        projectItems.forEach((item) => {
+          const itemCat = item.getAttribute('data-category');
+          if (selectedCat === 'all' || itemCat === selectedCat) {
+            item.style.display = '';
+          } else {
+            item.style.display = 'none';
+          }
+        });
+      });
+    });
+  }
+
+  setupProjectFilter();
+  document.addEventListener('astro:page-load', setupProjectFilter);
+</script>

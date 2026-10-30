@@ -1,0 +1,160 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-content">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="brand-title">
+          <span class="cyber-badge status-live">
+            <span class="status-dot"></span>
+            HỆ THỐNG HOẠT ĐỘNG ỔN ĐỊNH
+          </span>
+        </div>
+        <p class="brand-desc">
+          Không gian số cá nhân của Đặng Danh. Chia sẻ nghiên cứu Kỹ thuật Phần mềm, Trí tuệ Nhân tạo &amp; Sáng tạo Công nghệ.
+        </p>
+      </div>
+
+      <div class="footer-nav-group">
+        <div class="nav-col">
+          <h4 class="col-title">Điều hướng</h4>
+          <ul class="col-links">
+            <li><a href="/">Trang chủ</a></li>
+            <li><a href="/about/">Giới thiệu</a></li>
+            <li><a href="/projects/">Dự án</a></li>
+            <li><a href="/posts/">Bài viết</a></li>
+            <li><a href="/lab/">Thử nghiệm AI</a></li>
+            <li><a href="/contact/">Liên hệ</a></li>
+          </ul>
+        </div>
+
+        <div class="nav-col">
+          <h4 class="col-title">Kết nối</h4>
+          <ul class="col-links">
+            <li><a href="https://github.com/dangdanh090106" target="_blank" rel="noopener noreferrer">GitHub ↗</a></li>
+            <li><a href="https://linkedin.com/in/[YOUR_LINKEDIN]" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a></li>
+            <li><a href="mailto:contact.dangdanh@example.com">Email ↗</a></li>
+            <li><a href="/rss.xml">Kênh RSS ↗</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="copy-text">
+        © {currentYear} Đặng Danh. Được xây dựng với <span class="cyan-text">Astro</span> &amp; phát hành trên <span class="violet-text">GitHub Pages</span>.
+      </p>
+      <div class="footer-meta">
+        <span class="git-powered">Nội dung quản lý qua Git • Tối ưu không cơ sở dữ liệu cồng kềnh</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    margin-top: auto;
+    border-top: 1px solid var(--border-subtle);
+    background: linear-gradient(180deg, transparent 0%, rgba(12, 18, 34, 0.7) 100%);
+    padding: var(--space-3xl) 0 var(--space-xl);
+    position: relative;
+    z-index: 10;
+  }
+
+  .footer-top {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: var(--space-3xl);
+    padding-bottom: var(--space-2xl);
+    border-bottom: 1px solid var(--border-subtle);
+  }
+
+  .footer-brand {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .brand-desc {
+    max-width: 420px;
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  .footer-nav-group {
+    display: flex;
+    justify-content: flex-end;
+    gap: var(--space-3xl);
+  }
+
+  .col-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-primary);
+    margin-bottom: var(--space-md);
+    font-family: var(--font-mono);
+  }
+
+  .col-links {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .col-links a {
+    color: var(--text-secondary);
+    font-size: 0.92rem;
+    transition: all var(--duration-fast);
+  }
+
+  .col-links a:hover {
+    color: var(--accent-cyan);
+    transform: translateX(3px);
+  }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: var(--space-lg);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    flex-wrap: wrap;
+    gap: var(--space-md);
+  }
+
+  .cyan-text {
+    color: var(--accent-cyan);
+    font-weight: 600;
+  }
+
+  .violet-text {
+    color: var(--accent-violet);
+    font-weight: 600;
+  }
+
+  .git-powered {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--text-dim);
+  }
+
+  @media (max-width: 768px) {
+    .footer-top {
+      grid-template-columns: 1fr;
+      gap: var(--space-xl);
+    }
+    .footer-nav-group {
+      justify-content: space-between;
+    }
+    .footer-bottom {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+</style>

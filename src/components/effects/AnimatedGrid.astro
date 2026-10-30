@@ -1,0 +1,74 @@
+---
+interface Props {
+  className?: string;
+}
+
+const { className = '' } = Astro.props;
+---
+
+<div class={`animated-grid-container ${className}`} aria-hidden="true">
+  <!-- Glowing Horizon Line -->
+  <div class="horizon-glow"></div>
+  <!-- 3D Perspective Plane -->
+  <div class="cyber-grid-plane"></div>
+  <!-- Ambient Gradient Mask -->
+  <div class="grid-fade-mask"></div>
+</div>
+
+<style>
+  .animated-grid-container {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Intense glowing horizon */
+  .horizon-glow {
+    position: absolute;
+    top: 48%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, rgba(0, 240, 255, 0.8) 50%, rgba(255, 0, 122, 0.6) 75%, transparent 100%);
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.7), 0 0 50px rgba(168, 85, 247, 0.5);
+    opacity: 0.65;
+  }
+
+  .cyber-grid-plane {
+    position: absolute;
+    inset: -60%;
+    width: 220%;
+    height: 220%;
+    background-image: 
+      linear-gradient(to right, rgba(0, 240, 255, 0.12) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 240, 255, 0.12) 1px, transparent 1px);
+    background-size: 65px 65px;
+    transform: perspective(480px) rotateX(64deg) translateY(-15%) translateZ(0);
+    transform-origin: center top;
+    animation: gridFlow 16s linear infinite;
+    will-change: transform;
+  }
+
+  .grid-fade-mask {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% 25%, transparent 10%, var(--bg-primary) 78%);
+  }
+
+  @keyframes gridFlow {
+    0% {
+      transform: perspective(480px) rotateX(64deg) translateY(0);
+    }
+    100% {
+      transform: perspective(480px) rotateX(64deg) translateY(65px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cyber-grid-plane {
+      animation: none;
+    }
+  }
+</style>

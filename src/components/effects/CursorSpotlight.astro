@@ -1,0 +1,67 @@
+---
+---
+
+<div id="cursor-spotlight" class="spotlight-layer" aria-hidden="true"></div>
+
+<style>
+  .spotlight-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    background: radial-gradient(
+      600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(0, 247, 255, 0.05),
+      transparent 75%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    transform: translateZ(0);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .spotlight-layer {
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .spotlight-layer {
+      display: none;
+    }
+  }
+</style>
+
+<script>
+  function setupSpotlight() {
+    const spotlight = document.getElementById('cursor-spotlight');
+    if (!spotlight) return;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !window.matchMedia('(pointer: fine)').matches) {
+      return;
+    }
+
+    let ticking = false;
+    let clientX = 0;
+    let clientY = 0;
+
+    const onMouseMove = (e: MouseEvent) => {
+      clientX = e.clientX;
+      clientY = e.clientY;
+
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(() => {
+          spotlight.style.setProperty('--mouse-x', `${clientX}px`);
+          spotlight.style.setProperty('--mouse-y', `${clientY}px`);
+          ticking = false;
+        });
+      }
+    };
+
+    window.addEventListener('mousemove', onMouseMove, { passive: true });
+  }
+
+  setupSpotlight();
+  document.addEventListener('astro:page-load', setupSpotlight);
+</script>

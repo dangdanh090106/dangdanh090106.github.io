@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 360" width="600" height="360">
+  <defs>
+    <linearGradient id="bgCli" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#03050c"/>
+      <stop offset="100%" stop-color="#0b1021"/>
+    </linearGradient>
+    <linearGradient id="neonGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00ff9d"/>
+      <stop offset="100%" stop-color="#00f7ff"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="600" height="360" fill="url(#bgCli)"/>
+
+  <!-- Terminal Window Frame -->
+  <rect x="60" y="40" width="480" height="280" rx="12" fill="#060914" stroke="rgba(0, 255, 157, 0.35)" stroke-width="2"/>
+  
+  <rect x="60" y="40" width="480" height="36" rx="12" fill="#0d1428"/>
+  <rect x="60" y="64" width="480" height="12" fill="#0d1428"/>
+  <circle cx="85" cy="58" r="5" fill="#ef4444"/>
+  <circle cx="102" cy="58" r="5" fill="#f59e0b"/>
+  <circle cx="119" cy="58" r="5" fill="#10b981"/>
+  <text x="300" y="62" fill="#8292ab" font-family="'JetBrains Mono', monospace" font-size="11" text-anchor="middle">bash - dev-toolkit --v2.0</text>
+
+  <!-- Terminal Content Lines -->
+  <g font-family="'JetBrains Mono', monospace" font-size="13">
+    <text x="90" y="115" fill="#00ff9d" font-weight="bold">$ dev-tools init --target=production</text>
+    <text x="90" y="145" fill="#8292ab">✔ Validating monorepo dependencies... <tspan fill="#00ff9d">[DONE]</tspan></text>
+    <text x="90" y="175" fill="#8292ab">✔ Generating AST type definitions... <tspan fill="#00ff9d">[DONE]</tspan></text>
+    <text x="90" y="205" fill="#8292ab">✔ Bundling binary targets [x64, arm64]... <tspan fill="#00f7ff">[0.42s]</tspan></text>
+    <text x="90" y="240" fill="#00f7ff" font-weight="bold">🚀 Deployment completed with ZERO latency penalty.</text>
+    
+    <text x="90" y="280" fill="#00ff9d" font-weight="bold">$ git status _</text>
+  </g>
+</svg>

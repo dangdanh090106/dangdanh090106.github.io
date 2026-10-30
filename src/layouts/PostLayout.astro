@@ -1,0 +1,371 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  updatedDate?: Date;
+  tags: string[];
+  cover?: string;
+  headings: Heading[];
+}
+
+const { title, description, pubDate, updatedDate, tags, cover, headings } = Astro.props;
+
+const formattedDate = new Intl.DateTimeFormat('vi-VN', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+}).format(pubDate);
+
+const formattedUpdate = updatedDate
+  ? new Intl.DateTimeFormat('vi-VN', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    }).format(updatedDate)
+  : null;
+---
+
+<BaseLayout title={title} description={description} type="article" image={cover}>
+  <div class="container-narrow post-page-container">
+    <!-- Back to posts link -->
+    <a href="/posts/" class="back-link">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"></line>
+        <polyline points="12 19 5 12 12 5"></polyline>
+      </svg>
+      <span>Tất cả bài viết</span>
+    </a>
+
+    <!-- Article Header -->
+    <header class="article-header">
+      <div class="article-meta">
+        <span class="cyber-badge">
+          <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+        </span>
+        {formattedUpdate && (
+          <span class="update-badge">Cập nhật: {formattedUpdate}</span>
+        )}
+      </div>
+
+      <h1 class="article-title">{title}</h1>
+      <p class="article-lead">{description}</p>
+
+      <div class="tags-container">
+        {tags.map((tag) => (
+          <a href={`/posts/?tag=${encodeURIComponent(tag)}`} class="tag-link">
+            #{tag}
+          </a>
+        ))}
+      </div>
+
+      {cover && (
+        <div class="article-hero-cover">
+          <img src={cover} alt={title} class="hero-cover-img" />
+        </div>
+      )}
+    </header>
+
+    <!-- Table of Contents (if present) -->
+    {headings.length > 0 && <TableOfContents headings={headings} />}
+
+    <!-- Article Body -->
+    <article class="markdown-content">
+      <slot />
+    </article>
+
+    <!-- Article Footer -->
+    <footer class="article-end">
+      <div class="git-note glass-card">
+        <div class="git-note-header">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="6" y1="3" x2="6" y2="15"></line>
+            <circle cx="18" cy="6" r="3"></circle>
+            <circle cx="6" cy="18" r="3"></circle>
+            <path d="M18 9a9 9 0 0 1-9 9"></path>
+          </svg>
+          <strong>Git-Powered Post</strong>
+        </div>
+        <p>Bài viết này được quản lý hoàn toàn bằng Markdown trên GitHub. Bạn phát hiện lỗi chính tả hoặc muốn đóng góp?</p>
+        <a href="https://github.com/dangdanh090106/dangdanh090106.github.io" target="_blank" rel="noopener noreferrer" class="cyber-button secondary small">
+          Xem mã nguồn trên GitHub ↗
+        </a>
+      </div>
+
+      <div class="bottom-nav">
+        <a href="/posts/" class="cyber-button secondary">
+          ← Quay lại danh sách bài viết
+        </a>
+      </div>
+    </footer>
+  </div>
+</BaseLayout>
+
+<style>
+  .post-page-container {
+    padding-top: var(--space-3xl);
+    padding-bottom: var(--space-4xl);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xl);
+  }
+
+  .back-link:hover {
+    color: var(--accent-cyan);
+    transform: translateX(-4px);
+  }
+
+  .article-header {
+    margin-bottom: var(--space-2xl);
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: var(--space-xl);
+  }
+
+  .article-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
+    flex-wrap: wrap;
+  }
+
+  .update-badge {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  .article-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 5vw, 3.5rem);
+    font-weight: 900;
+    line-height: 1.15;
+    margin-bottom: var(--space-md);
+    letter-spacing: -0.03em;
+  }
+
+  .article-lead {
+    font-size: 1.15rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-lg);
+  }
+
+  .tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag-link {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent-cyan);
+    background: rgba(69, 230, 255, 0.08);
+    border: 1px solid rgba(69, 230, 255, 0.2);
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-sm);
+  }
+
+  .tag-link:hover {
+    background: rgba(69, 230, 255, 0.2);
+    border-color: var(--accent-cyan);
+  }
+
+  .article-hero-cover {
+    width: 100%;
+    margin-top: var(--space-xl);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid rgba(0, 247, 255, 0.25);
+    background: #04060d;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  }
+
+  .hero-cover-img {
+    width: 100%;
+    height: auto;
+    max-height: 420px;
+    object-fit: cover;
+  }
+
+  /* Markdown Content Typography */
+  .markdown-content {
+    font-size: 1.08rem;
+    line-height: 1.8;
+    color: #d1d5db;
+  }
+
+  .markdown-content :global(h2) {
+    font-size: 1.75rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding-bottom: 0.4rem;
+  }
+
+  .markdown-content :global(h3) {
+    font-size: 1.35rem;
+    margin-top: 1.8rem;
+    margin-bottom: 0.75rem;
+    color: var(--accent-cyan);
+  }
+
+  .markdown-content :global(p) {
+    margin-bottom: 1.5rem;
+    color: #cbd5e1;
+  }
+
+  .markdown-content :global(ul), .markdown-content :global(ol) {
+    margin-bottom: 1.5rem;
+    padding-left: 1.5rem;
+    color: #cbd5e1;
+  }
+
+  .markdown-content :global(li) {
+    margin-bottom: 0.4rem;
+  }
+
+  .markdown-content :global(blockquote) {
+    border-left: 3px solid var(--accent-cyan);
+    padding-left: 1.2rem;
+    margin: 1.8rem 0;
+    font-style: italic;
+    color: var(--text-secondary);
+    background: rgba(69, 230, 255, 0.04);
+    border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+
+  .markdown-content :global(code:not(pre code)) {
+    font-family: var(--font-mono);
+    font-size: 0.88em;
+    background: rgba(69, 230, 255, 0.1);
+    color: var(--accent-cyan);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    border: 1px solid rgba(69, 230, 255, 0.2);
+  }
+
+  .markdown-content :global(pre) {
+    position: relative;
+    padding: 1.25rem 1.4rem;
+    border-radius: var(--radius-md);
+    margin: 1.8rem 0;
+    overflow-x: auto;
+    border: 1px solid var(--border-subtle);
+    background: #090e1a !important;
+  }
+
+  .markdown-content :global(pre .copy-code-btn) {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    font-family: var(--font-mono);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-secondary);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .markdown-content :global(pre .copy-code-btn:hover) {
+    color: #fff;
+    background: rgba(69, 230, 255, 0.2);
+    border-color: var(--accent-cyan);
+  }
+
+  .article-end {
+    margin-top: var(--space-4xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--border-subtle);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+  }
+
+  .git-note {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .git-note-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--accent-cyan);
+  }
+
+  .git-note p {
+    font-size: 0.95rem;
+    color: var(--text-muted);
+  }
+
+  .small {
+    padding: 0.5rem 1rem;
+    font-size: 0.88rem;
+    align-self: flex-start;
+  }
+
+  .bottom-nav {
+    display: flex;
+    justify-content: flex-start;
+  }
+</style>
+
+<script>
+  function setupCodeBlockCopy() {
+    const preBlocks = document.querySelectorAll('.markdown-content pre');
+    preBlocks.forEach((pre) => {
+      if (pre.querySelector('.copy-code-btn')) return;
+
+      const button = document.createElement('button');
+      button.className = 'copy-code-btn';
+      button.textContent = 'Copy';
+      button.setAttribute('aria-label', 'Copy code to clipboard');
+
+      button.addEventListener('click', async () => {
+        const code = pre.querySelector('code')?.innerText || pre.innerText;
+        try {
+          await navigator.clipboard.writeText(code);
+          button.textContent = 'Copied!';
+          button.style.borderColor = '#10B981';
+          button.style.color = '#10B981';
+          setTimeout(() => {
+            button.textContent = 'Copy';
+            button.style.borderColor = '';
+            button.style.color = '';
+          }, 2000);
+        } catch (err) {
+          button.textContent = 'Failed';
+        }
+      });
+
+      pre.appendChild(button);
+    });
+  }
+
+  setupCodeBlockCopy();
+  document.addEventListener('astro:page-load', setupCodeBlockCopy);
+</script>

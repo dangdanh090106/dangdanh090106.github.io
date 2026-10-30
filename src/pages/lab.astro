@@ -1,0 +1,480 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const experiments = await getCollection('experiments');
+---
+
+<BaseLayout title="AI & Creative Lab" description="Khu vực thử nghiệm công nghệ sáng tạo, mô phỏng mạng neural và hiệu ứng tương tác của Đặng Danh.">
+  <div class="container lab-container">
+    <header class="lab-header">
+      <span class="cyber-badge violet">KHÔNG GIAN THỰC NGHIỆM</span>
+      <h1 class="page-title">AI & Creative <span class="neon-gradient-text">Lab</span></h1>
+      <p class="page-subtitle">
+        Nơi thử nghiệm các ý tưởng giao thoa giữa Trí tuệ Nhân tạo, Creative Coding và tương tác đồ họa thời gian thực. Mọi thử nghiệm đều chạy trực tiếp trên client mà không làm chậm hệ thống.
+      </p>
+    </header>
+
+    <!-- Interactive Experiment 1: Live Matrix / Cyber Stream -->
+    <section class="lab-section">
+      <div class="experiment-hero-card glass-card">
+        <div class="exp-header">
+          <div class="exp-title-row">
+            <span class="cyber-badge status-live">
+              <span class="status-dot"></span> LIVE DEMO
+            </span>
+            <span class="type-tag">[ HTML5 Canvas • Generative ]</span>
+          </div>
+          <h2 class="exp-title">Cyber Binary Cascade Simulator</h2>
+          <p class="exp-desc">
+            Mô phỏng dòng chảy ma trận số nhị phân và mã hex xanh lục / neon cyan với độ mờ tàn dư (phosphor decay). Tương tác trực tiếp bằng các nút điều khiển bên dưới.
+          </p>
+        </div>
+
+        <div class="canvas-wrap">
+          <canvas id="matrix-canvas" width="800" height="280"></canvas>
+          <div class="canvas-controls">
+            <button id="toggle-stream-btn" class="cyber-button secondary small">Tạm dừng / Tiếp tục</button>
+            <button id="color-stream-btn" class="cyber-button secondary small">Đổi bảng màu Neon</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interactive Experiment 2: LLM Token & Cost Estimator -->
+    <section class="lab-section">
+      <div class="experiment-tool-card glass-card">
+        <div class="exp-header">
+          <div class="exp-title-row">
+            <span class="cyber-badge">CÔNG CỤ TƯƠNG TÁC</span>
+            <span class="type-tag">[ AI Tool • Tokenizer Estimator ]</span>
+          </div>
+          <h2 class="exp-title">LLM Token & Context Estimator</h2>
+          <p class="exp-desc">
+            Nhập văn bản tiếng Việt hoặc mã nguồn để ước tính số lượng tokens, độ dài ngữ cảnh và chi phí inference ước tính.
+          </p>
+        </div>
+
+        <div class="calculator-grid">
+          <div class="input-col">
+            <label for="prompt-input" class="calc-label">Văn bản / Prompt thử nghiệm:</label>
+            <textarea
+              id="prompt-input"
+              rows="5"
+              placeholder="Nhập câu prompt hoặc đoạn code của bạn tại đây để kiểm tra..."
+              class="calc-textarea"
+            >Xây dựng một hệ thống AI Agent hỗ trợ lập trình viên tối ưu hóa mã nguồn và tự động tạo unit tests bằng Astro và TypeScript.</textarea>
+          </div>
+
+          <div class="output-col">
+            <div class="metric-card">
+              <span class="metric-label">Tokens ước tính</span>
+              <span id="token-count-display" class="metric-value">0</span>
+              <span class="metric-note">~4 ký tự / token tiếng Anh, ~1.5 - 2 ký tự / token tiếng Việt</span>
+            </div>
+
+            <div class="metric-card">
+              <span class="metric-label">Ký tự / Từ</span>
+              <span id="char-word-display" class="metric-value small">0 ký tự • 0 từ</span>
+            </div>
+
+            <div class="metric-card">
+              <span class="metric-label">Chi phí Inference ước tính</span>
+              <span id="cost-display" class="metric-value small">$0.000000</span>
+              <span class="metric-note">Dựa trên mức giá chuẩn $0.15 / 1M input tokens</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- All Laboratory Experiments Archive -->
+    <section class="lab-section">
+      <div class="archive-header">
+        <span class="cyber-badge violet">DANH MỤC THÍ NGHIỆM</span>
+        <h2 class="archive-title">Ghi chép Thử nghiệm (Lab Log)</h2>
+      </div>
+
+      <div class="exp-list-grid">
+        {experiments.map((exp) => (
+          <div class="exp-item glass-card">
+            <div class="exp-item-meta">
+              <span class="cyber-badge">{exp.data.type}</span>
+              <span class="exp-status">{exp.data.status}</span>
+            </div>
+            <h3 class="exp-item-title">{exp.data.title}</h3>
+            <p class="exp-item-desc">{exp.data.description}</p>
+            <div class="exp-item-tags">
+              {exp.data.tags.map((tag) => (
+                <span class="mini-tag">#{tag}</span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  </div>
+</BaseLayout>
+
+<style>
+  .lab-container {
+    padding-top: var(--space-3xl);
+    padding-bottom: var(--space-4xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-4xl);
+  }
+
+  .lab-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    max-width: 760px;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.3rem, 4.5vw, 3.4rem);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+  }
+
+  .page-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .lab-section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xl);
+  }
+
+  .exp-title-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-bottom: var(--space-sm);
+    flex-wrap: wrap;
+  }
+
+  .type-tag {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--accent-cyan);
+  }
+
+  .exp-title {
+    font-size: 1.6rem;
+    margin-bottom: var(--space-xs);
+  }
+
+  .exp-desc {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    max-width: 700px;
+    line-height: 1.6;
+    margin-bottom: var(--space-lg);
+  }
+
+  /* Canvas Wrap */
+  .canvas-wrap {
+    position: relative;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: #04070e;
+    border: 1px solid rgba(69, 230, 255, 0.2);
+  }
+
+  #matrix-canvas {
+    width: 100%;
+    height: 280px;
+    display: block;
+  }
+
+  .canvas-controls {
+    position: absolute;
+    bottom: 12px;
+    right: 12px;
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  /* Token Calculator */
+  .calculator-grid {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: var(--space-xl);
+  }
+
+  .calc-label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    margin-bottom: 0.5rem;
+  }
+
+  .calc-textarea {
+    width: 100%;
+    padding: 1rem;
+    background: rgba(7, 11, 20, 0.7);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-family: var(--font-mono);
+    font-size: 0.92rem;
+    line-height: 1.6;
+    resize: vertical;
+  }
+
+  .calc-textarea:focus {
+    outline: none;
+    border-color: var(--accent-cyan);
+  }
+
+  .output-col {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .metric-card {
+    background: rgba(7, 11, 20, 0.6);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-md) var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .metric-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    font-family: var(--font-mono);
+  }
+
+  .metric-value {
+    font-family: var(--font-mono);
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+  }
+
+  .metric-value.small {
+    font-size: 1.15rem;
+    color: var(--text-primary);
+  }
+
+  .metric-note {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+  }
+
+  /* Archive Grid */
+  .archive-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-xs);
+  }
+
+  .archive-title {
+    font-size: 1.8rem;
+  }
+
+  .exp-list-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-xl);
+  }
+
+  .exp-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+  }
+
+  .exp-item-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .exp-status {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--accent-violet);
+  }
+
+  .exp-item-title {
+    font-size: 1.2rem;
+    margin-top: 0.2rem;
+  }
+
+  .exp-item-desc {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    flex-grow: 1;
+  }
+
+  .exp-item-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    margin-top: 0.5rem;
+  }
+
+  .mini-tag {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+
+  .small {
+    font-size: 0.82rem;
+    padding: 0.4rem 0.8rem;
+  }
+
+  @media (max-width: 820px) {
+    .calculator-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  // Matrix Rain Simulation
+  function initMatrixCanvas() {
+    const canvas = document.getElementById('matrix-canvas') as HTMLCanvasElement;
+    const toggleBtn = document.getElementById('toggle-stream-btn');
+    const colorBtn = document.getElementById('color-stream-btn');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = (canvas.width = canvas.parentElement?.clientWidth || 800);
+    let height = (canvas.height = 280);
+
+    const chars = '0123456789ABCDEFλμθΩπ∑√∫';
+    const fontSize = 14;
+    const columns = Math.floor(width / fontSize);
+    const drops: number[] = [];
+
+    for (let i = 0; i < columns; i++) {
+      drops[i] = Math.floor(Math.random() * -50);
+    }
+
+    let isRunning = true;
+    let colorMode = 0; // 0: Cyan, 1: Emerald, 2: Violet
+    const colorThemes = [
+      { text: '#45E6FF', head: '#FFFFFF' },
+      { text: '#10B981', head: '#A7F3D0' },
+      { text: '#9B7BFF', head: '#E9D5FF' },
+    ];
+
+    function draw() {
+      if (!ctx || !isRunning) return;
+
+      ctx.fillStyle = 'rgba(4, 7, 14, 0.12)';
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.font = `${fontSize}px monospace`;
+      const currentTheme = colorThemes[colorMode];
+
+      for (let i = 0; i < drops.length; i++) {
+        const char = chars[Math.floor(Math.random() * chars.length)];
+        const x = i * fontSize;
+        const y = drops[i] * fontSize;
+
+        if (drops[i] > 0) {
+          ctx.fillStyle = currentTheme.text;
+          ctx.fillText(char, x, y);
+        }
+
+        if (y > height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+
+    let intervalId: any = null;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting && isRunning) {
+          if (!intervalId) intervalId = setInterval(draw, 50);
+        } else {
+          if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+          }
+        }
+      });
+    }, { threshold: 0.1 });
+
+    observer.observe(canvas);
+
+    toggleBtn?.addEventListener('click', () => {
+      isRunning = !isRunning;
+      toggleBtn.textContent = isRunning ? 'Tạm dừng' : 'Tiếp tục';
+      if (isRunning) {
+        if (!intervalId) intervalId = setInterval(draw, 50);
+      } else {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+    });
+
+    colorBtn?.addEventListener('click', () => {
+      colorMode = (colorMode + 1) % colorThemes.length;
+    });
+
+    document.addEventListener('astro:before-swap', () => {
+      if (intervalId) clearInterval(intervalId);
+      observer.disconnect();
+    });
+  }
+
+  // Token Estimator Logic
+  function initTokenEstimator() {
+    const textarea = document.getElementById('prompt-input') as HTMLTextAreaElement;
+    const tokenDisplay = document.getElementById('token-count-display');
+    const charWordDisplay = document.getElementById('char-word-display');
+    const costDisplay = document.getElementById('cost-display');
+
+    if (!textarea || !tokenDisplay) return;
+
+    function calculate() {
+      const text = textarea.value;
+      const charCount = text.length;
+      const words = text.trim() ? text.trim().split(/\s+/).length : 0;
+
+      // Approximate heuristic: ~3 chars per token for mixed Vietnamese/code, ~4 for pure English
+      const estimatedTokens = Math.max(1, Math.round(charCount / 3.2));
+      // Price: $0.15 per 1,000,000 tokens
+      const estimatedCost = (estimatedTokens / 1000000) * 0.15;
+
+      if (tokenDisplay) tokenDisplay.textContent = estimatedTokens.toLocaleString();
+      if (charWordDisplay) charWordDisplay.textContent = `${charCount} ký tự • ${words} từ`;
+      if (costDisplay) costDisplay.textContent = `$${estimatedCost.toFixed(6)}`;
+    }
+
+    textarea.addEventListener('input', calculate);
+    calculate();
+  }
+
+  initMatrixCanvas();
+  initTokenEstimator();
+
+  document.addEventListener('astro:page-load', () => {
+    initMatrixCanvas();
+    initTokenEstimator();
+  });
+</script>

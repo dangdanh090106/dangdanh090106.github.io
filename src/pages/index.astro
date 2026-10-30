@@ -1,0 +1,481 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/Hero.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import PostCard from '../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+// Fetch featured projects
+const allProjects = await getCollection('projects');
+const featuredProjects = allProjects
+  .filter((p) => p.data.featured)
+  .sort((a, b) => a.data.order - b.data.order)
+  .slice(0, 3);
+
+// Fetch latest posts
+const allPosts = await getCollection('posts');
+const latestPosts = allPosts
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
+
+// Tech stack categorized with vibrant neon palettes
+const techStacks = [
+  {
+    category: 'Trí tuệ Nhân tạo & Agents',
+    color: '#00f0ff',
+    badgeClass: '',
+    skills: ['Python', 'PyTorch', 'LangChain', 'LLMs / Prompt Engineering', 'VectorDB', 'HuggingFace', 'RAG Systems'],
+  },
+  {
+    category: 'Kiến trúc Web & Frontend',
+    color: '#a855f7',
+    badgeClass: 'violet',
+    skills: ['TypeScript', 'Astro 5', 'React / Next.js', 'Tailwind CSS', 'HTML5 Canvas API', 'Modern Responsive UI'],
+  },
+  {
+    category: 'Backend & Dữ liệu',
+    color: '#3b82f6',
+    badgeClass: '',
+    skills: ['Node.js', 'FastAPI', 'REST & GraphQL', 'PostgreSQL', 'Redis', 'Microservices'],
+  },
+  {
+    category: 'DevOps & Tự động hóa',
+    color: '#00f5a0',
+    badgeClass: 'status-live',
+    skills: ['GitHub Actions CI/CD', 'Git Version Control', 'Docker', 'Linux / Bash Scripting', 'Cloudflare Workers'],
+  },
+];
+---
+
+<BaseLayout title="Home" description="Portfolio cá nhân của Đặng Danh - Software Engineer & AI Researcher.">
+  <!-- Hero Section -->
+  <Hero />
+
+  <!-- About Snapshot Section -->
+  <section class="section about-snapshot">
+    <div class="container">
+      <div class="snapshot-card glass-card">
+        <div class="snapshot-content">
+          <div class="section-label">
+            <span class="cyber-badge violet">KẾT NỐI Ý TƯỞNG &amp; THỰC THI</span>
+          </div>
+          <h2 class="snapshot-title">
+            Tư duy thiết kế: <span class="neon-gradient-text">Hiệu năng &amp; Chiều sâu</span>
+          </h2>
+          <p class="snapshot-desc">
+            Tôi là <strong>Đặng Danh</strong>, một kỹ sư phần mềm tập trung vào việc hiện thực hóa các giải pháp kết hợp giữa trí tuệ nhân tạo hiện đại và kiến trúc web tin cậy. Với niềm đam mê tối ưu hóa đến từng mili-giây, mọi thành phần trong hệ thống đều được cân nhắc kỹ lưỡng để đạt độ mượt mà cao nhất.
+          </p>
+          <div class="snapshot-cta">
+            <a href="/about/" class="cyber-button secondary">
+              <span>Khám phá hành trình &amp; Triết lý</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="snapshot-pillars">
+          <div class="pillar-card">
+            <div class="pillar-num">01</div>
+            <div class="pillar-body">
+              <h4 class="pillar-title">Tối ưu Tốc độ</h4>
+              <p class="pillar-desc">Loại bỏ mã nguồn thừa thãi, render tĩnh siêu nhẹ và mượt mà tức thì.</p>
+            </div>
+          </div>
+
+          <div class="pillar-card">
+            <div class="pillar-num">02</div>
+            <div class="pillar-body">
+              <h4 class="pillar-title">Quản lý Minh bạch</h4>
+              <p class="pillar-desc">Nội dung quản lý qua Git, xuất bản tự động bằng Markdown chuẩn mực.</p>
+            </div>
+          </div>
+
+          <div class="pillar-card">
+            <div class="pillar-num">03</div>
+            <div class="pillar-body">
+              <h4 class="pillar-title">Đồng hành cùng AI</h4>
+              <p class="pillar-desc">Kết hợp tư duy lập trình chặt chẽ với sức mạnh thông minh của các mô hình AI.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Tech Stack Section -->
+  <section class="section tech-stack-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="cyber-badge">CÔNG NGHỆ CỐT LÕI</span>
+        <h2 class="section-title">Hệ Sinh Thái Kỹ Thuật</h2>
+        <p class="section-desc">
+          Các nền tảng, ngôn ngữ và framework tôi làm chủ và ứng dụng thường xuyên trong nghiên cứu cũng như sản phẩm thực tế.
+        </p>
+      </div>
+
+      <div class="skills-grid">
+        {techStacks.map((group) => (
+          <div class="skill-category-card glass-card">
+            <div class="category-header">
+              <span class="cat-indicator" style={`background-color: ${group.color}; box-shadow: 0 0 14px ${group.color};`}></span>
+              <h3 class="cat-title">{group.category}</h3>
+            </div>
+            <div class="skill-chips">
+              {group.skills.map((skill) => (
+                <span class="skill-chip">{skill}</span>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Projects Section -->
+  <section class="section featured-projects-section">
+    <div class="container">
+      <div class="section-header-row">
+        <div>
+          <span class="cyber-badge">DỰ ÁN NỔI BẬT</span>
+          <h2 class="section-title">Sản Phẩm &amp; Showcase</h2>
+        </div>
+        <a href="/projects/" class="cyber-button secondary">
+          <span>Tất cả dự án</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+
+      <div class="cards-grid">
+        {featuredProjects.map((project) => (
+          <ProjectCard
+            title={project.data.title}
+            description={project.data.description}
+            category={project.data.category}
+            tags={project.data.tags}
+            cover={project.data.cover}
+            github={project.data.github}
+            demo={project.data.demo}
+            status={project.data.status}
+            featured={project.data.featured}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Latest Posts Section -->
+  <section class="section latest-posts-section">
+    <div class="container">
+      <div class="section-header-row">
+        <div>
+          <span class="cyber-badge violet">BÀI VIẾT &amp; TRI THỨC</span>
+          <h2 class="section-title">Ghi Chép Kỹ Thuật</h2>
+        </div>
+        <a href="/posts/" class="cyber-button secondary">
+          <span>Xem tất cả bài viết</span>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </a>
+      </div>
+
+      <div class="cards-grid">
+        {latestPosts.map((post) => (
+          <PostCard
+            title={post.data.title}
+            description={post.data.description}
+            pubDate={post.data.pubDate}
+            slug={post.id}
+            tags={post.data.tags}
+            cover={post.data.cover}
+          />
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Dynamic Cosmic Portal CTA Banner -->
+  <section class="section contact-banner-section">
+    <div class="container">
+      <div class="banner-box glass-card">
+        <div class="banner-laser-glow"></div>
+        <div class="banner-content">
+          <span class="cyber-badge status-live">
+            <span class="status-dot"></span> SẴN SÀNG HỢP TÁC &amp; NGHIÊN CỨU
+          </span>
+          <h2 class="banner-title">
+            Bạn có ý tưởng dự án hoặc muốn trao đổi chuyên sâu?
+          </h2>
+          <p class="banner-desc">
+            Tôi luôn chào đón cơ hội kết nối với những người đam mê công nghệ, chia sẻ góc nhìn kiến trúc hoặc cùng phát triển những giải pháp mang tính đột phá.
+          </p>
+          <div class="banner-actions">
+            <a href="/contact/" class="cyber-button primary">
+              <span>Bắt đầu trò chuyện</span>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13"></line>
+                <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+              </svg>
+            </a>
+            <a href="https://github.com/dangdanh090106" target="_blank" rel="noopener noreferrer" class="cyber-button secondary">
+              <span>Khám phá GitHub Profile ↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .section {
+    padding: var(--space-4xl) 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .section-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-3xl);
+    max-width: 680px;
+  }
+
+  .section-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: var(--space-3xl);
+    flex-wrap: wrap;
+    gap: var(--space-lg);
+  }
+
+  .section-title {
+    font-size: clamp(2rem, 3.8vw, 2.7rem);
+    letter-spacing: -0.025em;
+    margin-top: var(--space-xs);
+  }
+
+  .section-desc {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+  }
+
+  /* Snapshot Card */
+  .snapshot-card {
+    display: grid;
+    grid-template-columns: 1.25fr 0.95fr;
+    gap: var(--space-3xl);
+    align-items: center;
+    background: linear-gradient(135deg, rgba(16, 24, 46, 0.85) 0%, rgba(10, 15, 30, 0.75) 100%);
+    border: 1px solid rgba(0, 240, 255, 0.25);
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.8), 0 0 30px rgba(0, 240, 255, 0.12);
+  }
+
+  .snapshot-content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .snapshot-title {
+    font-size: clamp(1.6rem, 2.8vw, 2.2rem);
+    line-height: 1.3;
+  }
+
+  .snapshot-desc {
+    font-size: 1.08rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+  }
+
+  .snapshot-cta {
+    margin-top: var(--space-sm);
+  }
+
+  /* Pillars */
+  .snapshot-pillars {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .pillar-card {
+    background: rgba(8, 12, 24, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-md);
+    padding: var(--space-md) var(--space-lg);
+    display: flex;
+    align-items: flex-start;
+    gap: var(--space-md);
+    transition: all var(--duration-fast);
+  }
+
+  .pillar-card:hover {
+    border-color: rgba(0, 240, 255, 0.35);
+    transform: translateX(4px);
+    background: rgba(12, 18, 36, 0.85);
+  }
+
+  .pillar-num {
+    font-family: var(--font-mono);
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--accent-cyan);
+    line-height: 1.2;
+  }
+
+  .pillar-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .pillar-title {
+    font-size: 1.05rem;
+    color: #ffffff;
+    font-weight: 700;
+  }
+
+  .pillar-desc {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  /* Skills Grid */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    gap: var(--space-xl);
+  }
+
+  .skill-category-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    background: rgba(12, 18, 36, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.09);
+    transition: all var(--duration-normal);
+  }
+
+  .skill-category-card:hover {
+    border-color: rgba(0, 240, 255, 0.35);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 240, 255, 0.15);
+  }
+
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .cat-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+
+  .cat-title {
+    font-size: 1.15rem;
+    color: var(--text-primary);
+  }
+
+  .skill-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+  }
+
+  .skill-chip {
+    font-family: var(--font-mono);
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: #d1d5db;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 0.35rem 0.75rem;
+    border-radius: var(--radius-sm);
+    transition: all var(--duration-fast);
+  }
+
+  .skill-chip:hover {
+    color: #ffffff;
+    border-color: var(--accent-cyan);
+    background: rgba(0, 240, 255, 0.12);
+    box-shadow: 0 0 12px rgba(0, 240, 255, 0.25);
+    transform: translateY(-2px);
+  }
+
+  /* Cards Grid */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    gap: var(--space-xl);
+  }
+
+  /* Portal Banner */
+  .banner-box {
+    position: relative;
+    text-align: center;
+    background: radial-gradient(ellipse at 50% 0%, rgba(20, 35, 70, 0.9) 0%, rgba(8, 12, 24, 0.95) 75%);
+    border: 1px solid rgba(0, 240, 255, 0.35);
+    box-shadow: 0 0 50px rgba(0, 240, 255, 0.18), 0 20px 60px rgba(0, 0, 0, 0.9);
+    padding: var(--space-4xl) var(--space-2xl);
+    overflow: hidden;
+  }
+
+  .banner-laser-glow {
+    position: absolute;
+    top: 0;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #00f0ff, #a855f7, transparent);
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.8);
+  }
+
+  .banner-content {
+    max-width: 720px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-lg);
+  }
+
+  .banner-title {
+    font-size: clamp(2rem, 3.8vw, 2.7rem);
+    line-height: 1.25;
+  }
+
+  .banner-desc {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+  }
+
+  .banner-actions {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: var(--space-sm);
+  }
+
+  @media (max-width: 860px) {
+    .snapshot-card {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

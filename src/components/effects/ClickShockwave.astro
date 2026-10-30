@@ -1,0 +1,106 @@
+---
+---
+
+<div id="shockwave-container" aria-hidden="true"></div>
+
+<style>
+  #shockwave-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 9999;
+    overflow: hidden;
+  }
+
+  :global(.cyber-shockwave) {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    margin-left: -25px;
+    margin-top: -25px;
+    border-radius: 50%;
+    pointer-events: none;
+    border: 1.5px solid var(--accent-cyan);
+    box-shadow: 0 0 20px var(--accent-cyan);
+    animation: clickRipple 0.45s cubic-bezier(0.1, 0.9, 0.2, 1) forwards;
+    will-change: transform, opacity;
+  }
+</style>
+
+<script>
+  let initialized = false;
+
+  function setupShockwave() {
+    const container = document.getElementById('shockwave-container');
+    if (!container) return;
+
+    if (!initialized) {
+      window.addEventListener('pointerdown', (e) => {
+        const target = e.target as HTMLElement;
+        const isInteractive = target?.closest('button, a, .glass-card, input, textarea, .tag-chip, .filter-tab');
+        if (!isInteractive) return;
+
+        const ripple = document.createElement('div');
+        ripple.className = 'cyber-shockwave';
+        ripple.style.left = `${e.clientX}px`;
+        ripple.style.top = `${e.clientY}px`;
+
+        if (Math.random() > 0.5) {
+          ripple.style.borderColor = '#ff007f';
+          ripple.style.boxShadow = '0 0 20px #ff007f';
+        }
+
+        container.appendChild(ripple);
+
+        ripple.addEventListener('animationend', () => {
+          ripple.remove();
+        });
+      }, { passive: true });
+
+      initialized = true;
+    }
+
+    // High performance 3D Card Tilt with cached rect and rAF
+    if (window.matchMedia('(pointer: fine)').matches && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.querySelectorAll('.glass-card').forEach((card) => {
+        const el = card as HTMLElement;
+        let rect: DOMRect | null = null;
+        let ticking = false;
+        let mouseX = 0;
+        let mouseY = 0;
+
+        el.addEventListener('mouseenter', () => {
+          rect = el.getBoundingClientRect();
+        }, { passive: true });
+
+        el.addEventListener('mousemove', (e) => {
+          if (!rect) rect = el.getBoundingClientRect();
+          mouseX = e.clientX - rect.left;
+          mouseY = e.clientY - rect.top;
+
+          if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(() => {
+              if (rect) {
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                const rotateX = ((mouseY - centerY) / centerY) * -4;
+                const rotateY = ((mouseX - centerX) / centerX) * 4;
+                el.style.transform = `perspective(800px) rotateX(${rotateX.toFixed(1)}deg) rotateY(${rotateY.toFixed(1)}deg) translateY(-3px)`;
+              }
+              ticking = false;
+            });
+          }
+        }, { passive: true });
+
+        el.addEventListener('mouseleave', () => {
+          rect = null;
+          el.style.transform = '';
+        }, { passive: true });
+      });
+    }
+  }
+
+  setupShockwave();
+  document.addEventListener('astro:page-load', setupShockwave);
+</script>

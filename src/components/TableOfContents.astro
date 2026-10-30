@@ -1,0 +1,120 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const { headings } = Astro.props;
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+---
+
+{toc.length > 0 && (
+  <nav class="toc-container glass-card" aria-label="Table of Contents">
+    <div class="toc-header">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="8" y1="6" x2="21" y2="6"></line>
+        <line x1="8" y1="12" x2="21" y2="12"></line>
+        <line x1="8" y1="18" x2="21" y2="18"></line>
+        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+      </svg>
+      <span>Mục lục bài viết</span>
+    </div>
+
+    <ul class="toc-list">
+      {toc.map((heading) => (
+        <li class={`toc-item depth-${heading.depth}`}>
+          <a href={`#${heading.slug}`} class="toc-link" data-slug={heading.slug}>
+            {heading.text}
+          </a>
+        </li>
+      ))}
+    </ul>
+  </nav>
+)}
+
+<style>
+  .toc-container {
+    padding: var(--space-lg);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-xl);
+    background: rgba(14, 21, 37, 0.5);
+  }
+
+  .toc-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    margin-bottom: var(--space-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-family: var(--font-mono);
+  }
+
+  .toc-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .toc-item.depth-2 {
+    padding-left: 0;
+  }
+
+  .toc-item.depth-3 {
+    padding-left: 1rem;
+    font-size: 0.88rem;
+  }
+
+  .toc-link {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    display: block;
+    line-height: 1.4;
+    transition: color var(--duration-fast);
+  }
+
+  .toc-link:hover, .toc-link.active {
+    color: var(--accent-cyan);
+  }
+</style>
+
+<script>
+  function setupTocHighlight() {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const id = entry.target.getAttribute('id');
+            if (!id) return;
+            document.querySelectorAll('.toc-link').forEach((link) => {
+              if (link.getAttribute('data-slug') === id) {
+                link.classList.add('active');
+              } else {
+                link.classList.remove('active');
+              }
+            });
+          }
+        });
+      },
+      { rootMargin: '-80px 0px -70% 0px' }
+    );
+
+    document.querySelectorAll('article h2, article h3').forEach((h) => {
+      observer.observe(h);
+    });
+  }
+
+  setupTocHighlight();
+  document.addEventListener('astro:page-load', setupTocHighlight);
+</script>

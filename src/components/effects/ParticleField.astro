@@ -1,0 +1,138 @@
+---
+---
+
+<canvas id="particle-field-canvas" class="particle-canvas" aria-hidden="true"></canvas>
+
+<style>
+  .particle-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.75;
+    transform: translateZ(0);
+  }
+</style>
+
+<script>
+  function initParticles() {
+    const canvas = document.getElementById('particle-field-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || window.innerWidth < 640) {
+      canvas.style.display = 'none';
+      return;
+    }
+
+    const ctx = canvas.getContext('2d', { alpha: true });
+    if (!ctx) return;
+
+    let width = (canvas.width = canvas.parentElement?.clientWidth || window.innerWidth);
+    let height = (canvas.height = canvas.parentElement?.clientHeight || window.innerHeight);
+
+    let resizeTimer: any;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(() => {
+        if (!canvas.parentElement) return;
+        width = canvas.width = canvas.parentElement.clientWidth;
+        height = canvas.height = canvas.parentElement.clientHeight;
+      }, 150);
+    }, { passive: true });
+
+    // Lightweight particle network
+    const particleCount = 22;
+    interface Particle {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      size: number;
+      color: string;
+      alpha: number;
+    }
+
+    const colors = ['#00f7ff', '#ff007f', '#a855f7', '#00ff9d'];
+    const particles: Particle[] = [];
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.45,
+        vy: (Math.random() - 0.5) * 0.45,
+        size: Math.random() * 2 + 1,
+        color: colors[i % colors.length],
+        alpha: Math.random() * 0.5 + 0.3,
+      });
+    }
+
+    let animationFrameId: number;
+    let isVisible = true;
+
+    // Pause when tab is hidden or element is scrolled offscreen
+    document.addEventListener('visibilitychange', () => {
+      isVisible = !document.hidden;
+      if (isVisible) animationFrameId = requestAnimationFrame(render);
+    });
+
+    function render() {
+      if (!ctx || !isVisible) return;
+      ctx.clearRect(0, 0, width, height);
+
+      // Fast line connections with single stroke call
+      ctx.lineWidth = 0.75;
+      ctx.strokeStyle = 'rgba(0, 247, 255, 0.15)';
+
+      for (let i = 0; i < particles.length; i++) {
+        const p1 = particles[i];
+        for (let j = i + 1; j < particles.length; j++) {
+          const p2 = particles[j];
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const distSq = dx * dx + dy * dy;
+
+          if (distSq < 10000) { // 100px squared
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      // Draw particles (0 shadowBlur for native 60fps)
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.globalAlpha = p.alpha;
+        ctx.fill();
+
+        p.x += p.vx;
+        p.y += p.vy;
+
+        if (p.x < 0) p.x = width;
+        else if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height;
+        else if (p.y > height) p.y = 0;
+      }
+      ctx.globalAlpha = 1;
+
+      animationFrameId = requestAnimationFrame(render);
+    }
+
+    render();
+
+    document.addEventListener('astro:before-swap', () => {
+      cancelAnimationFrame(animationFrameId);
+    });
+  }
+
+  initParticles();
+  document.addEventListener('astro:page-load', initParticles);
+</script>

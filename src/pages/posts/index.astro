@@ -1,0 +1,370 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/PostCard.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('posts');
+const posts = allPosts
+  .filter((p) => !p.data.draft)
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+// Collect all unique tags
+const allTags = Array.from(new Set(posts.flatMap((p) => p.data.tags || []))).sort();
+---
+
+<BaseLayout title="Articles" description="Các bài viết, chia sẻ kỹ thuật và phân tích về AI & Phần mềm của Đặng Danh.">
+  <div class="container posts-container">
+    <!-- Header -->
+    <header class="posts-header">
+      <span class="cyber-badge violet">TRI THỨC & GHI CHÉP</span>
+      <h1 class="page-title">Kho Lưu Trữ <span class="neon-gradient-text">Bài Viết</span></h1>
+      <p class="page-subtitle">
+        Quản lý hoàn toàn bằng Git & Markdown. Đọc các bài viết mới nhất về công nghệ, kiến trúc web, trí tuệ nhân tạo và kinh nghiệm thực chiến.
+      </p>
+    </header>
+
+    <!-- Search & Filter Controls -->
+    <div class="search-filter-panel glass-card">
+      <div class="search-box">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="search-icon">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="text"
+          id="post-search-input"
+          placeholder="Tìm kiếm bài viết theo tiêu đề, mô tả hoặc tag..."
+          autocomplete="off"
+        />
+        <button id="clear-search-btn" class="clear-btn" hidden aria-label="Xóa tìm kiếm">✕</button>
+      </div>
+
+      <div class="tags-filter-bar">
+        <span class="filter-label">Lọc theo thẻ:</span>
+        <button class="tag-chip active" data-tag="all">Tất cả ({posts.length})</button>
+        {allTags.map((tag) => (
+          <button class="tag-chip" data-tag={tag}>
+            #{tag}
+          </button>
+        ))}
+      </div>
+    </div>
+
+    <!-- Results Counter -->
+    <div class="results-meta">
+      <span id="results-count">Hiển thị {posts.length} bài viết</span>
+    </div>
+
+    <!-- Posts Grid -->
+    <div id="posts-grid" class="posts-grid">
+      {posts.map((post) => (
+        <div
+          class="post-item-wrapper"
+          data-title={post.data.title.toLowerCase()}
+          data-desc={post.data.description.toLowerCase()}
+          data-tags={JSON.stringify(post.data.tags.map((t) => t.toLowerCase()))}
+        >
+          <PostCard
+            title={post.data.title}
+            description={post.data.description}
+            pubDate={post.data.pubDate}
+            slug={post.id}
+            tags={post.data.tags}
+            cover={post.data.cover}
+          />
+        </div>
+      ))}
+    </div>
+
+    <!-- Empty State -->
+    <div id="empty-state" class="empty-state glass-card" hidden>
+      <div class="empty-icon">⚡</div>
+      <h3>Không tìm thấy bài viết nào</h3>
+      <p>Thử tìm kiếm với từ khóa khác hoặc xóa bộ lọc thẻ hiện tại.</p>
+      <button id="reset-filter-btn" class="cyber-button secondary">
+        Đặt lại bộ lọc
+      </button>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .posts-container {
+    padding-top: var(--space-3xl);
+    padding-bottom: var(--space-4xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2xl);
+  }
+
+  .posts-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    max-width: 720px;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.3rem, 4.5vw, 3.4rem);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+  }
+
+  .page-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  /* Search & Filter Panel */
+  .search-filter-panel {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    padding: var(--space-xl);
+    background: rgba(14, 21, 37, 0.7);
+  }
+
+  .search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 1rem;
+    color: var(--accent-cyan);
+    pointer-events: none;
+  }
+
+  #post-search-input {
+    width: 100%;
+    padding: 0.85rem 2.8rem 0.85rem 3rem;
+    font-size: 0.98rem;
+    font-family: var(--font-sans);
+    background: rgba(7, 11, 20, 0.7);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    transition: all var(--duration-fast);
+  }
+
+  #post-search-input:focus {
+    outline: none;
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 15px rgba(69, 230, 255, 0.2);
+  }
+
+  .clear-btn {
+    position: absolute;
+    right: 1rem;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  .clear-btn:hover {
+    color: var(--text-primary);
+  }
+
+  .tags-filter-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .filter-label {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+
+  .tag-chip {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--radius-full);
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: all var(--duration-fast);
+  }
+
+  .tag-chip:hover {
+    color: #fff;
+    border-color: var(--accent-cyan);
+    background: rgba(69, 230, 255, 0.08);
+  }
+
+  .tag-chip.active {
+    color: #fff;
+    background: rgba(69, 230, 255, 0.18);
+    border-color: var(--accent-cyan);
+    box-shadow: var(--glow-cyan-sm);
+  }
+
+  .results-meta {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  /* Posts Grid */
+  .posts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: var(--space-xl);
+  }
+
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    padding: var(--space-4xl) var(--space-xl);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-md);
+  }
+
+  .empty-icon {
+    font-size: 2.5rem;
+    color: var(--accent-amber);
+  }
+</style>
+
+<script>
+  function setupSearchAndFilter() {
+    const searchInput = document.getElementById('post-search-input') as HTMLInputElement;
+    const clearBtn = document.getElementById('clear-search-btn') as HTMLButtonElement;
+    const tagButtons = document.querySelectorAll('.tag-chip');
+    const postItems = document.querySelectorAll('.post-item-wrapper') as NodeListOf<HTMLElement>;
+    const resultsCount = document.getElementById('results-count');
+    const emptyState = document.getElementById('empty-state');
+    const resetBtn = document.getElementById('reset-filter-btn');
+
+    if (!searchInput || !postItems.length) return;
+
+    let currentTag = 'all';
+    let searchQuery = '';
+
+    // Check URL param for ?tag=...
+    const urlParams = new URLSearchParams(window.location.search);
+    const tagFromUrl = urlParams.get('tag');
+    if (tagFromUrl) {
+      currentTag = tagFromUrl;
+      tagButtons.forEach((btn) => {
+        if (btn.getAttribute('data-tag')?.toLowerCase() === tagFromUrl.toLowerCase()) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+    }
+
+    function filterPosts() {
+      let visibleCount = 0;
+
+      postItems.forEach((item) => {
+        const title = item.getAttribute('data-title') || '';
+        const desc = item.getAttribute('data-desc') || '';
+        const tagsJson = item.getAttribute('data-tags') || '[]';
+        const tags: string[] = JSON.parse(tagsJson);
+
+        const matchesQuery =
+          !searchQuery ||
+          title.includes(searchQuery) ||
+          desc.includes(searchQuery) ||
+          tags.some((t) => t.includes(searchQuery));
+
+        const matchesTag =
+          currentTag === 'all' ||
+          tags.some((t) => t.toLowerCase() === currentTag.toLowerCase());
+
+        if (matchesQuery && matchesTag) {
+          item.style.display = '';
+          visibleCount++;
+        } else {
+          item.style.display = 'none';
+        }
+      });
+
+      if (resultsCount) {
+        resultsCount.textContent = `Hiển thị ${visibleCount} bài viết`;
+      }
+
+      if (emptyState) {
+        if (visibleCount === 0) {
+          emptyState.removeAttribute('hidden');
+        } else {
+          emptyState.setAttribute('hidden', '');
+        }
+      }
+    }
+
+    searchInput.addEventListener('input', () => {
+      searchQuery = searchInput.value.trim().toLowerCase();
+      if (searchQuery) {
+        clearBtn.removeAttribute('hidden');
+      } else {
+        clearBtn.setAttribute('hidden', '');
+      }
+      filterPosts();
+    });
+
+    clearBtn?.addEventListener('click', () => {
+      searchInput.value = '';
+      searchQuery = '';
+      clearBtn.setAttribute('hidden', '');
+      filterPosts();
+      searchInput.focus();
+    });
+
+    tagButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        tagButtons.forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentTag = btn.getAttribute('data-tag') || 'all';
+
+        // Update URL query without full reload
+        const newUrl = new URL(window.location.href);
+        if (currentTag !== 'all') {
+          newUrl.searchParams.set('tag', currentTag);
+        } else {
+          newUrl.searchParams.delete('tag');
+        }
+        window.history.replaceState({}, '', newUrl.toString());
+
+        filterPosts();
+      });
+    });
+
+    resetBtn?.addEventListener('click', () => {
+      searchInput.value = '';
+      searchQuery = '';
+      clearBtn?.setAttribute('hidden', '');
+      currentTag = 'all';
+      tagButtons.forEach((b) => {
+        if (b.getAttribute('data-tag') === 'all') b.classList.add('active');
+        else b.classList.remove('active');
+      });
+      window.history.replaceState({}, '', window.location.pathname);
+      filterPosts();
+    });
+
+    // Run initial filter if tag param was present
+    if (tagFromUrl) {
+      filterPosts();
+    }
+  }
+
+  setupSearchAndFilter();
+  document.addEventListener('astro:page-load', setupSearchAndFilter);
+</script>

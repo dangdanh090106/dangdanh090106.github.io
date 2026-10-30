@@ -1,0 +1,326 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const contactInfo = [
+  {
+    channel: 'Email Trực Tiếp',
+    value: 'contact.dangdanh@example.com',
+    href: 'mailto:contact.dangdanh@example.com',
+    badge: 'Phản hồi nhanh',
+    desc: 'Phương thức tốt nhất để trao đổi công việc, hợp tác dự án hoặc lời mời phỏng vấn.',
+  },
+  {
+    channel: 'GitHub',
+    value: 'github.com/dangdanh090106',
+    href: 'https://github.com/dangdanh090106',
+    badge: 'Mã nguồn mở',
+    desc: 'Xem các kho lưu trữ, commit history và các dự án đang phát triển.',
+  },
+  {
+    channel: 'LinkedIn',
+    value: 'linkedin.com/in/[YOUR_LINKEDIN]',
+    href: 'https://linkedin.com/in/[YOUR_LINKEDIN]',
+    badge: 'Mạng lưới chuyên nghiệp',
+    desc: 'Kết nối nghề nghiệp và cập nhật các chứng chỉ, hành trình học vấn.',
+  },
+];
+---
+
+<BaseLayout title="Contact" description="Kênh liên hệ trực tiếp, kết nối hợp tác kỹ thuật và mạng xã hội của Đặng Danh.">
+  <div class="container contact-container">
+    <header class="contact-header">
+      <span class="cyber-badge status-live">
+        <span class="status-dot"></span> SẴN SÀNG KẾT NỐI
+      </span>
+      <h1 class="page-title">Khởi Tạo <span class="neon-gradient-text">Liên Lạc</span></h1>
+      <p class="page-subtitle">
+        Bạn có câu hỏi, ý tưởng dự án hoặc muốn thảo luận về kỹ thuật? Hãy gửi tin nhắn qua email hoặc kết nối qua các kênh chuyên môn dưới đây.
+      </p>
+    </header>
+
+    <div class="contact-layout">
+      <!-- Direct Contact Channels -->
+      <div class="channels-column">
+        <h2 class="col-heading">Kênh Liên Hệ Chính</h2>
+        <div class="channel-cards">
+          {contactInfo.map((item) => (
+            <div class="channel-card glass-card">
+              <div class="card-head">
+                <span class="channel-name">{item.channel}</span>
+                <span class="cyber-badge">{item.badge}</span>
+              </div>
+              <p class="channel-desc">{item.desc}</p>
+              <a href={item.href} target={item.href.startsWith('http') ? '_blank' : undefined} rel={item.href.startsWith('http') ? 'noopener noreferrer' : undefined} class="channel-link">
+                <span>{item.value}</span>
+                <span class="arrow-icon">↗</span>
+              </a>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <!-- Interactive Message Composer (Mailto / Copy Generator) -->
+      <div class="composer-column">
+        <div class="composer-card glass-card">
+          <div class="composer-header">
+            <h2 class="composer-title">Soạn Tin Nhắn Nhanh</h2>
+            <p class="composer-subtitle">
+              Website tĩnh không lưu trữ dữ liệu cá nhân. Biểu mẫu này sẽ mở trực tiếp ứng dụng Email của bạn với nội dung đã được điền sẵn.
+            </p>
+          </div>
+
+          <form id="contact-composer-form" class="composer-form">
+            <div class="form-group">
+              <label for="sender-name">Tên hoặc tổ chức của bạn:</label>
+              <input type="text" id="sender-name" placeholder="Nguyễn Văn A" required class="form-input" />
+            </div>
+
+            <div class="form-group">
+              <label for="sender-subject">Chủ đề thảo luận:</label>
+              <input type="text" id="sender-subject" placeholder="Cơ hội hợp tác / Trao đổi dự án AI" required class="form-input" />
+            </div>
+
+            <div class="form-group">
+              <label for="sender-message">Nội dung tin nhắn:</label>
+              <textarea id="sender-message" rows="5" placeholder="Chia sẻ đôi nét về dự án hoặc lời nhắn của bạn..." required class="form-textarea"></textarea>
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="cyber-button primary">
+                <span>Gửi qua Email App</span>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="22" y1="2" x2="11" y2="13"></line>
+                  <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+              </button>
+
+              <button type="button" id="copy-message-btn" class="cyber-button secondary">
+                Sao chép nội dung
+              </button>
+            </div>
+            <p id="form-feedback" class="form-feedback" hidden></p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .contact-container {
+    padding-top: var(--space-3xl);
+    padding-bottom: var(--space-4xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xl);
+  }
+
+  .contact-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    max-width: 720px;
+  }
+
+  .page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.3rem, 4.5vw, 3.4rem);
+    font-weight: 800;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+  }
+
+  .page-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .contact-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: var(--space-2xl);
+  }
+
+  .col-heading {
+    font-size: 1.3rem;
+    margin-bottom: var(--space-lg);
+  }
+
+  .channel-cards {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .channel-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .channel-name {
+    font-size: 1.15rem;
+    font-weight: 700;
+  }
+
+  .channel-desc {
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+
+  .channel-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--accent-cyan);
+    margin-top: 0.4rem;
+  }
+
+  .arrow-icon {
+    transition: transform var(--duration-fast);
+  }
+
+  .channel-link:hover .arrow-icon {
+    transform: translate(2px, -2px);
+  }
+
+  /* Form Composer */
+  .composer-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+    background: rgba(14, 21, 37, 0.75);
+    border-color: rgba(69, 230, 255, 0.2);
+  }
+
+  .composer-title {
+    font-size: 1.4rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .composer-subtitle {
+    font-size: 0.92rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+  }
+
+  .composer-form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .form-group label {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    font-family: var(--font-mono);
+  }
+
+  .form-input, .form-textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    background: rgba(7, 11, 20, 0.7);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    transition: all var(--duration-fast);
+  }
+
+  .form-input:focus, .form-textarea:focus {
+    outline: none;
+    border-color: var(--accent-cyan);
+    box-shadow: 0 0 12px rgba(69, 230, 255, 0.2);
+  }
+
+  .form-actions {
+    display: flex;
+    gap: var(--space-md);
+    flex-wrap: wrap;
+    margin-top: var(--space-sm);
+  }
+
+  .form-feedback {
+    font-size: 0.88rem;
+    color: var(--accent-emerald);
+    font-family: var(--font-mono);
+    margin-top: 0.5rem;
+  }
+
+  @media (max-width: 860px) {
+    .contact-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  function setupContactComposer() {
+    const form = document.getElementById('contact-composer-form') as HTMLFormElement;
+    const copyBtn = document.getElementById('copy-message-btn');
+    const feedback = document.getElementById('form-feedback');
+
+    if (!form) return;
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const name = (document.getElementById('sender-name') as HTMLInputElement).value;
+      const subject = (document.getElementById('sender-subject') as HTMLInputElement).value;
+      const message = (document.getElementById('sender-message') as HTMLTextAreaElement).value;
+
+      const emailRecipient = 'contact.dangdanh@example.com';
+      const mailtoUrl = `mailto:${emailRecipient}?subject=${encodeURIComponent(`[Portfolio Contact] ${subject} - ${name}`)}&body=${encodeURIComponent(
+        `Chào Đặng Danh,\n\nTôi là: ${name}\n\nNội dung trao đổi:\n${message}\n\nTrân trọng,\n${name}`
+      )}`;
+
+      window.location.href = mailtoUrl;
+
+      if (feedback) {
+        feedback.textContent = 'Đã mở ứng dụng gửi Email của bạn thành công.';
+        feedback.removeAttribute('hidden');
+      }
+    });
+
+    copyBtn?.addEventListener('click', async () => {
+      const name = (document.getElementById('sender-name') as HTMLInputElement).value || '[Tên của bạn]';
+      const subject = (document.getElementById('sender-subject') as HTMLInputElement).value || '[Chủ đề]';
+      const message = (document.getElementById('sender-message') as HTMLTextAreaElement).value || '[Nội dung]';
+
+      const fullText = `Chủ đề: [Portfolio Contact] ${subject} - ${name}\n\nChào Đặng Danh,\n\nTôi là: ${name}\n\nNội dung trao đổi:\n${message}\n\nTrân trọng,\n${name}`;
+
+      try {
+        await navigator.clipboard.writeText(fullText);
+        if (feedback) {
+          feedback.textContent = 'Đã sao chép nội dung tin nhắn vào Clipboard!';
+          feedback.removeAttribute('hidden');
+          setTimeout(() => feedback.setAttribute('hidden', ''), 3000);
+        }
+      } catch (err) {
+        if (feedback) {
+          feedback.textContent = 'Không thể sao chép, vui lòng thử lại.';
+          feedback.removeAttribute('hidden');
+        }
+      }
+    });
+  }
+
+  setupContactComposer();
+  document.addEventListener('astro:page-load', setupContactComposer);
+</script>
