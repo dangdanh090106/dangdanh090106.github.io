@@ -2,15 +2,16 @@
   <defs>
     <linearGradient id="bgAgent" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#04060d"/>
-      <stop offset="100%" stop-color="#0c1328"/>
+      <stop offset="50%" stop-color="#071126"/>
+      <stop offset="100%" stop-color="#0c1735"/>
     </linearGradient>
     <linearGradient id="gradCyan" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#00f7ff"/>
-      <stop offset="100%" stop-color="#3b82f6"/>
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#818cf8"/>
     </linearGradient>
     <linearGradient id="gradPink" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#ff007f"/>
-      <stop offset="100%" stop-color="#a855f7"/>
+      <stop offset="0%" stop-color="#f43f5e"/>
+      <stop offset="100%" stop-color="#818cf8"/>
     </linearGradient>
     <filter id="glowEffect" x="-20%" y="-20%" width="140%" height="140%">
       <feGaussianBlur stdDeviation="6" result="blur"/>
@@ -19,12 +20,70 @@
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
+
+    <style>
+      @keyframes spinSlow {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      @keyframes spinReverse {
+        from { transform: rotate(360deg); }
+        to { transform: rotate(0deg); }
+      }
+      @keyframes pulseNode {
+        0%, 100% { transform: scale(1); filter: drop-shadow(0 0 6px #38bdf8); }
+        50% { transform: scale(1.15); filter: drop-shadow(0 0 22px #38bdf8); }
+      }
+      @keyframes pulseNodePink {
+        0%, 100% { transform: scale(1); filter: drop-shadow(0 0 6px #f43f5e); }
+        50% { transform: scale(1.15); filter: drop-shadow(0 0 22px #f43f5e); }
+      }
+      @keyframes pulseSignalFlow {
+        0% { stroke-dashoffset: 160; opacity: 0.2; }
+        50% { opacity: 1; }
+        100% { stroke-dashoffset: 0; opacity: 0.2; }
+      }
+      @keyframes signalDotTravel1 {
+        0% { cx: 110px; cy: 110px; opacity: 0; }
+        20% { opacity: 1; }
+        80% { opacity: 1; }
+        100% { cx: 270px; cy: 180px; opacity: 0; }
+      }
+      @keyframes signalDotTravel2 {
+        0% { cx: 110px; cy: 250px; opacity: 0; }
+        20% { opacity: 1; }
+        80% { opacity: 1; }
+        100% { cx: 270px; cy: 180px; opacity: 0; }
+      }
+      @keyframes signalDotTravel3 {
+        0% { cx: 270px; cy: 180px; opacity: 0; }
+        20% { opacity: 1; }
+        80% { opacity: 1; }
+        100% { cx: 440px; cy: 120px; opacity: 0; }
+      }
+      @keyframes signalDotTravel4 {
+        0% { cx: 270px; cy: 180px; opacity: 0; }
+        20% { opacity: 1; }
+        80% { opacity: 1; }
+        100% { cx: 440px; cy: 240px; opacity: 0; }
+      }
+
+      .spin-ring { animation: spinSlow 20s linear infinite; transform-origin: 270px 180px; }
+      .spin-ring-rev { animation: spinReverse 14s linear infinite; transform-origin: 270px 180px; }
+      .pulse-core { animation: pulseNode 3s ease-in-out infinite; transform-origin: 270px 180px; }
+      .pulse-rag { animation: pulseNodePink 3s ease-in-out infinite 1.5s; transform-origin: 440px 120px; }
+      .signal-line { stroke-dasharray: 8 6; animation: pulseSignalFlow 2.8s linear infinite; }
+      .dot-travel-1 { animation: signalDotTravel1 2.8s linear infinite; }
+      .dot-travel-2 { animation: signalDotTravel2 2.8s linear infinite 0.7s; }
+      .dot-travel-3 { animation: signalDotTravel3 2.8s linear infinite 1.4s; }
+      .dot-travel-4 { animation: signalDotTravel4 2.8s linear infinite 2.1s; }
+    </style>
   </defs>
 
   <rect width="600" height="360" fill="url(#bgAgent)"/>
 
   <!-- Matrix Grid -->
-  <g opacity="0.12" stroke="#00f7ff" stroke-width="1">
+  <g opacity="0.1" stroke="#38bdf8" stroke-width="1">
     <line x1="0" y1="60" x2="600" y2="60"/>
     <line x1="0" y1="120" x2="600" y2="120"/>
     <line x1="0" y1="180" x2="600" y2="180"/>
@@ -38,40 +97,62 @@
   </g>
 
   <!-- Neural Network Connections -->
-  <g stroke="rgba(0, 247, 255, 0.4)" stroke-width="2">
-    <line x1="120" y1="100" x2="240" y2="180"/>
-    <line x1="120" y1="260" x2="240" y2="180"/>
-    <line x1="240" y1="180" x2="360" y2="120"/>
-    <line x1="240" y1="180" x2="360" y2="240"/>
-    <line x1="360" y1="120" x2="480" y2="180"/>
-    <line x1="360" y1="240" x2="480" y2="180"/>
-    <line x1="360" y1="120" x2="360" y2="240" stroke="rgba(255, 0, 127, 0.5)"/>
+  <g stroke="rgba(56, 189, 248, 0.45)" stroke-width="2">
+    <line class="signal-line" x1="110" y1="110" x2="270" y2="180"/>
+    <line class="signal-line" x1="110" y1="250" x2="270" y2="180"/>
+    <line class="signal-line" x1="270" y1="180" x2="440" y2="120"/>
+    <line class="signal-line" x1="270" y1="180" x2="440" y2="240"/>
   </g>
 
-  <!-- Center Core Ring -->
-  <circle cx="300" cy="180" r="90" fill="none" stroke="rgba(0, 247, 255, 0.2)" stroke-dasharray="6 6"/>
-  <circle cx="300" cy="180" r="65" fill="none" stroke="rgba(168, 85, 247, 0.35)"/>
+  <!-- Travelling Synaptic Energy Packets -->
+  <circle class="dot-travel-1" cx="110" cy="110" r="4.5" fill="#38bdf8" filter="url(#glowEffect)"/>
+  <circle class="dot-travel-2" cx="110" cy="250" r="4.5" fill="#00ff9d" filter="url(#glowEffect)"/>
+  <circle class="dot-travel-3" cx="270" cy="180" r="4.5" fill="#f43f5e" filter="url(#glowEffect)"/>
+  <circle class="dot-travel-4" cx="270" cy="180" r="4.5" fill="#818cf8" filter="url(#glowEffect)"/>
 
-  <!-- Autonomous Agent Core Node -->
-  <circle cx="240" cy="180" r="28" fill="#04060d" stroke="url(#gradCyan)" stroke-width="3" filter="url(#glowEffect)"/>
-  <text x="240" y="185" fill="#00f7ff" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="bold" text-anchor="middle">LLM</text>
+  <!-- Rotating Outer Telemetry Rings Around Agent Core -->
+  <g class="spin-ring">
+    <circle cx="270" cy="180" r="62" fill="none" stroke="rgba(56, 189, 248, 0.3)" stroke-dasharray="14 8" stroke-width="1.5"/>
+    <circle cx="332" cy="180" r="3.5" fill="#38bdf8"/>
+  </g>
 
-  <circle cx="360" cy="120" r="22" fill="#04060d" stroke="url(#gradPink)" stroke-width="2.5" filter="url(#glowEffect)"/>
-  <text x="360" y="125" fill="#ff007f" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold" text-anchor="middle">RAG</text>
+  <g class="spin-ring-rev">
+    <circle cx="270" cy="180" r="48" fill="none" stroke="rgba(244, 63, 94, 0.35)" stroke-dasharray="8 12" stroke-width="1.5"/>
+    <circle cx="270" cy="132" r="3" fill="#f43f5e"/>
+  </g>
 
-  <circle cx="360" cy="240" r="22" fill="#04060d" stroke="#00ff9d" stroke-width="2.5" filter="url(#glowEffect)"/>
-  <text x="360" y="245" fill="#00ff9d" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold" text-anchor="middle">TOOL</text>
+  <!-- Left Input Nodes -->
+  <g transform="translate(110, 110)">
+    <circle cx="0" cy="0" r="24" fill="#081024" stroke="#38bdf8" stroke-width="2"/>
+    <text x="0" y="4" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" text-anchor="middle">PERCEIVE</text>
+  </g>
 
-  <!-- Peripheral Nodes -->
-  <circle cx="120" cy="100" r="14" fill="#00f7ff" opacity="0.8"/>
-  <circle cx="120" cy="260" r="14" fill="#3b82f6" opacity="0.8"/>
-  <circle cx="480" cy="180" r="18" fill="#ff007f" filter="url(#glowEffect)"/>
+  <g transform="translate(110, 250)">
+    <circle cx="0" cy="0" r="24" fill="#081024" stroke="#00ff9d" stroke-width="2"/>
+    <text x="0" y="4" fill="#00ff9d" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" text-anchor="middle">MEMORY</text>
+  </g>
 
-  <!-- Code / Data HUD elements -->
-  <rect x="40" y="30" width="130" height="26" rx="6" fill="rgba(0, 247, 255, 0.12)" stroke="rgba(0, 247, 255, 0.4)"/>
-  <text x="105" y="47" fill="#00f7ff" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold" text-anchor="middle">AGENTIC_V2.6</text>
+  <!-- Central Agent ReAct Brain Core -->
+  <g class="pulse-core" transform="translate(270, 180)">
+    <circle cx="0" cy="0" r="34" fill="#0d1838" stroke="url(#gradCyan)" stroke-width="3" filter="url(#glowEffect)"/>
+    <circle cx="0" cy="0" r="20" fill="#050a16" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
+    <text x="0" y="5" fill="#ffffff" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="bold" text-anchor="middle">AGENT</text>
+  </g>
 
-  <rect x="430" y="30" width="130" height="26" rx="6" fill="rgba(0, 255, 157, 0.12)" stroke="rgba(0, 255, 157, 0.4)"/>
-  <circle cx="445" cy="43" r="4" fill="#00ff9d"/>
-  <text x="492" y="47" fill="#00ff9d" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold" text-anchor="middle">STATUS: ACTIVE</text>
+  <!-- Right Nodes: RAG & Output Action -->
+  <g class="pulse-rag" transform="translate(440, 120)">
+    <circle cx="0" cy="0" r="26" fill="#140f26" stroke="#f43f5e" stroke-width="2"/>
+    <text x="0" y="-3" fill="#f43f5e" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="bold" text-anchor="middle">VECTOR</text>
+    <text x="0" y="10" fill="#f43f5e" font-family="'JetBrains Mono', monospace" font-size="8" text-anchor="middle">RAG DB</text>
+  </g>
+
+  <g transform="translate(440, 240)">
+    <circle cx="0" cy="0" r="26" fill="#0e142e" stroke="#818cf8" stroke-width="2"/>
+    <text x="0" y="-3" fill="#818cf8" font-family="'JetBrains Mono', monospace" font-size="9" font-weight="bold" text-anchor="middle">EXECUTE</text>
+    <text x="0" y="10" fill="#818cf8" font-family="'JetBrains Mono', monospace" font-size="8" text-anchor="middle">ACTIONS</text>
+  </g>
+
+  <!-- Telemetry Badge -->
+  <rect x="200" y="30" width="140" height="24" rx="6" fill="#080e22" stroke="rgba(56, 189, 248, 0.4)"/>
+  <text x="270" y="46" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="bold" text-anchor="middle">AUTONOMOUS ReAct</text>
 </svg>

@@ -1,57 +1,110 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" width="800" height="420">
   <defs>
     <linearGradient id="bgPerf" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#03050c"/>
-      <stop offset="50%" stop-color="#071420"/>
-      <stop offset="100%" stop-color="#0a1a1c"/>
+      <stop offset="0%" stop-color="#04060d"/>
+      <stop offset="50%" stop-color="#061622"/>
+      <stop offset="100%" stop-color="#0a1f24"/>
     </linearGradient>
-    <linearGradient id="perfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+    <linearGradient id="perfGrad" x1="0%" y1="100%" x2="100%" y2="0%">
       <stop offset="0%" stop-color="#00ff9d"/>
-      <stop offset="100%" stop-color="#00f7ff"/>
+      <stop offset="50%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="#818cf8"/>
     </linearGradient>
+    <filter id="perfGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <style>
+      @keyframes needleSweep {
+        0% { transform: rotate(-75deg); }
+        50% { transform: rotate(80deg); }
+        70% { transform: rotate(72deg); }
+        100% { transform: rotate(80deg); }
+      }
+      @keyframes gaugeTrackPulse {
+        0%, 100% { filter: drop-shadow(0 0 10px #00ff9d); }
+        50% { filter: drop-shadow(0 0 25px #38bdf8); }
+      }
+      @keyframes speedDash {
+        0% { transform: translateX(-100px); opacity: 0; }
+        50% { opacity: 0.8; }
+        100% { transform: translateX(200px); opacity: 0; }
+      }
+      @keyframes scorePulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+      }
+
+      .needle-arm { animation: needleSweep 4s cubic-bezier(0.16, 1, 0.3, 1) infinite alternate; transform-origin: 400px 225px; }
+      .gauge-pulse { animation: gaugeTrackPulse 3s ease-in-out infinite; }
+      .dash-1 { animation: speedDash 2.5s linear infinite; }
+      .dash-2 { animation: speedDash 2s linear infinite 0.6s; }
+      .dash-3 { animation: speedDash 3s linear infinite 1.2s; }
+      .score-anim { animation: scorePulse 3s ease-in-out infinite; transform-origin: 400px 175px; }
+    </style>
   </defs>
 
   <rect width="800" height="420" fill="url(#bgPerf)"/>
 
+  <!-- Speed Rays passing horizontally -->
+  <g stroke="#38bdf8" stroke-width="2" opacity="0.4">
+    <line class="dash-1" x1="100" y1="90" x2="220" y2="90" stroke-linecap="round"/>
+    <line class="dash-2" x1="550" y1="120" x2="680" y2="120" stroke-linecap="round"/>
+    <line class="dash-3" x1="80" y1="330" x2="200" y2="330" stroke-linecap="round"/>
+    <line class="dash-1" x1="580" y1="350" x2="720" y2="350" stroke-linecap="round"/>
+  </g>
+
   <!-- Speedometer / Gauge -->
-  <g transform="translate(400, 210)">
-    <!-- Outer Track -->
-    <path d="M -130,50 A 140 140 0 1 1 130,50" fill="none" stroke="rgba(255, 255, 255, 0.1)" stroke-width="18" stroke-linecap="round"/>
+  <g class="gauge-pulse" transform="translate(400, 225)">
+    <!-- Outer Inactive Track -->
+    <path d="M -130,45 A 140 140 0 1 1 130,45" fill="none" stroke="rgba(255, 255, 255, 0.12)" stroke-width="16" stroke-linecap="round"/>
     
     <!-- Active 100% Track -->
-    <path d="M -130,50 A 140 140 0 1 1 130,50" fill="none" stroke="url(#perfGrad)" stroke-width="18" stroke-linecap="round"/>
+    <path d="M -130,45 A 140 140 0 1 1 130,45" fill="none" stroke="url(#perfGrad)" stroke-width="16" stroke-linecap="round" filter="url(#perfGlow)"/>
 
     <!-- Score Text -->
-    <text x="0" y="-10" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-size="64" font-weight="900" text-anchor="middle">100</text>
-    <text x="0" y="25" fill="#00ff9d" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="bold" text-anchor="middle" letter-spacing="3">PERFECT SCORE</text>
+    <g class="score-anim">
+      <text x="0" y="-15" fill="#ffffff" font-family="'Outfit', sans-serif" font-size="68" font-weight="900" text-anchor="middle">100</text>
+      <text x="0" y="20" fill="#00ff9d" font-family="'JetBrains Mono', monospace" font-size="14" font-weight="bold" text-anchor="middle" letter-spacing="3">PERFECT 100/100</text>
+    </g>
+
+    <circle cx="0" cy="0" r="16" fill="#0b172a" stroke="#00ff9d" stroke-width="3"/>
   </g>
+
+  <!-- Animated Gauge Needle -->
+  <line class="needle-arm" x1="400" y1="225" x2="400" y2="110" stroke="#f43f5e" stroke-width="4.5" stroke-linecap="round" filter="url(#perfGlow)"/>
+  <circle cx="400" cy="225" r="7" fill="#ffffff"/>
 
   <!-- Metric Badges Left -->
-  <g transform="translate(100, 150)">
-    <rect width="140" height="60" rx="8" fill="#091424" stroke="rgba(0, 247, 255, 0.3)"/>
-    <text x="15" y="25" fill="#8292ab" font-family="'JetBrains Mono', monospace" font-size="11">FIRST CONTENTFUL</text>
-    <text x="15" y="48" fill="#00f7ff" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="bold">0.3s</text>
+  <g transform="translate(90, 140)">
+    <rect width="165" height="68" rx="12" fill="#091726" stroke="rgba(56, 189, 248, 0.35)" stroke-width="1.5" filter="url(#perfGlow)"/>
+    <text x="18" y="28" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="11">FIRST CONTENTFUL</text>
+    <text x="18" y="54" fill="#38bdf8" font-family="'Outfit', sans-serif" font-size="22" font-weight="bold">0.3s</text>
   </g>
 
-  <g transform="translate(100, 230)">
-    <rect width="140" height="60" rx="8" fill="#091424" stroke="rgba(0, 255, 157, 0.3)"/>
-    <text x="15" y="25" fill="#8292ab" font-family="'JetBrains Mono', monospace" font-size="11">TIME TO INTERACTIVE</text>
-    <text x="15" y="48" fill="#00ff9d" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="bold">0.4s</text>
+  <g transform="translate(90, 230)">
+    <rect width="165" height="68" rx="12" fill="#091b22" stroke="rgba(0, 255, 157, 0.35)" stroke-width="1.5" filter="url(#perfGlow)"/>
+    <text x="18" y="28" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="11">TIME TO INTERACTIVE</text>
+    <text x="18" y="54" fill="#00ff9d" font-family="'Outfit', sans-serif" font-size="22" font-weight="bold">0.4s</text>
   </g>
 
   <!-- Metric Badges Right -->
-  <g transform="translate(560, 150)">
-    <rect width="140" height="60" rx="8" fill="#091424" stroke="rgba(0, 255, 157, 0.3)"/>
-    <text x="15" y="25" fill="#8292ab" font-family="'JetBrains Mono', monospace" font-size="11">TOTAL BLOCKING</text>
-    <text x="15" y="48" fill="#00ff9d" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="bold">0 ms</text>
+  <g transform="translate(545, 140)">
+    <rect width="165" height="68" rx="12" fill="#091b22" stroke="rgba(0, 255, 157, 0.35)" stroke-width="1.5" filter="url(#perfGlow)"/>
+    <text x="18" y="28" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="11">TOTAL BLOCKING</text>
+    <text x="18" y="54" fill="#00ff9d" font-family="'Outfit', sans-serif" font-size="22" font-weight="bold">0 ms</text>
   </g>
 
-  <g transform="translate(560, 230)">
-    <rect width="140" height="60" rx="8" fill="#091424" stroke="rgba(0, 247, 255, 0.3)"/>
-    <text x="15" y="25" fill="#8292ab" font-family="'JetBrains Mono', monospace" font-size="11">CUMULATIVE SHIFT</text>
-    <text x="15" y="48" fill="#00f7ff" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="bold">0.00</text>
+  <g transform="translate(545, 230)">
+    <rect width="165" height="68" rx="12" fill="#091726" stroke="rgba(56, 189, 248, 0.35)" stroke-width="1.5" filter="url(#perfGlow)"/>
+    <text x="18" y="28" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="11">CUMULATIVE SHIFT</text>
+    <text x="18" y="54" fill="#38bdf8" font-family="'Outfit', sans-serif" font-size="22" font-weight="bold">0.00</text>
   </g>
 
-  <!-- Title -->
-  <text x="400" y="55" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="bold" text-anchor="middle" letter-spacing="2">STATIC WEB PERFORMANCE OPTIMIZATION</text>
+  <!-- Header Title -->
+  <text x="400" y="55" fill="#ffffff" font-family="'Outfit', sans-serif" font-size="22" font-weight="800" text-anchor="middle" letter-spacing="2">STATIC WEB PERFORMANCE OPTIMIZATION</text>
 </svg>

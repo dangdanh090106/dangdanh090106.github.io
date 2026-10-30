@@ -1,4 +1,4 @@
-/* Animations & Dynamic Keyframes */
+/* Animations & Dynamic Keyframes - GPU Accelerated */
 
 @keyframes conicRotate {
   0% {
@@ -35,29 +35,29 @@
     transform: translateY(0px) rotate(0deg);
   }
   50% {
-    transform: translateY(-12px) rotate(1deg);
+    transform: translateY(-10px) rotate(1deg);
   }
 }
 
 @keyframes pulseGlow {
   0%, 100% {
-    opacity: 0.6;
+    opacity: 0.7;
     transform: scale(1);
-    filter: drop-shadow(0 0 25px rgba(0, 247, 255, 0.5));
+    filter: drop-shadow(0 0 25px rgba(0, 240, 255, 0.5));
   }
   50% {
     opacity: 1;
-    transform: scale(1.08);
-    filter: drop-shadow(0 0 50px rgba(255, 0, 127, 0.7));
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 45px rgba(255, 0, 127, 0.7));
   }
 }
 
 @keyframes neonBreath {
   0%, 100% {
-    text-shadow: 0 0 15px rgba(0, 247, 255, 0.6), 0 0 35px rgba(0, 247, 255, 0.4);
+    text-shadow: 0 0 15px rgba(0, 240, 255, 0.6), 0 0 35px rgba(0, 240, 255, 0.3);
   }
   50% {
-    text-shadow: 0 0 25px rgba(255, 0, 127, 0.8), 0 0 55px rgba(168, 85, 247, 0.6);
+    text-shadow: 0 0 25px rgba(255, 0, 127, 0.7), 0 0 50px rgba(168, 85, 247, 0.5);
   }
 }
 
@@ -67,8 +67,8 @@
     transform: scale(1);
   }
   50% {
-    opacity: 0.3;
-    transform: scale(0.75);
+    opacity: 0.35;
+    transform: scale(0.8);
   }
 }
 
@@ -91,6 +91,116 @@
     opacity: 0;
   }
 }
+
+@keyframes shimmerSweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+@keyframes borderBeamRotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* High-Impact Visual Effects - GPU Composited (transform & opacity only) */
+@keyframes hudScan {
+  0% {
+    transform: translate3d(0, -100%, 0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.8;
+  }
+  85% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate3d(0, 400%, 0);
+    opacity: 0;
+  }
+}
+
+@keyframes hudBracketPulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.15);
+    opacity: 1;
+    filter: drop-shadow(0 0 6px var(--accent-cyan));
+  }
+}
+
+@keyframes reticleSpin {
+  from {
+    transform: translate(-50%, -50%) rotate(0deg);
+  }
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}
+
+@keyframes eqLivePulse {
+  0%, 100% {
+    height: 6px;
+    opacity: 0.4;
+  }
+  50% {
+    height: 22px;
+    opacity: 1;
+  }
+}
+
+@keyframes telemetryBeam {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+@keyframes glitchFlicker {
+  0%, 100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  92% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+  93% {
+    opacity: 0.8;
+    transform: translate3d(-1.5px, 0.5px, 0);
+  }
+  94% {
+    opacity: 1;
+    transform: translate3d(1.5px, -0.5px, 0);
+  }
+  95% {
+    opacity: 0.9;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes floatGentle {
+  0%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
 
 /* Reduced motion accessibility */
 @media (prefers-reduced-motion: reduce) {

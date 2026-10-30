@@ -1,0 +1,108 @@
+---
+---
+
+<div class="shooting-stars-container" aria-hidden="true">
+  <div class="star star-1"></div>
+  <div class="star star-2"></div>
+  <div class="star star-3"></div>
+  <div class="star star-4"></div>
+  <div class="star star-5"></div>
+</div>
+
+<style>
+  .shooting-stars-container {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    overflow: hidden;
+    transform: translateZ(0);
+  }
+
+  .star {
+    position: absolute;
+    width: 120px;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, #00f0ff 40%, #ffffff 80%, #ff007f 100%);
+    border-radius: 999px;
+    opacity: 0;
+    transform: translate3d(0, 0, 0) rotate(-40deg);
+    filter: drop-shadow(0 0 8px #00f0ff);
+    will-change: transform, opacity;
+  }
+
+  .star::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: -2px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow: 0 0 10px #00f0ff, 0 0 20px #ff007f;
+  }
+
+  .star-1 {
+    top: 8%;
+    left: 80%;
+    animation: shoot 7s ease-in-out infinite;
+    animation-delay: 0.5s;
+  }
+
+  .star-2 {
+    top: 25%;
+    left: 95%;
+    width: 160px;
+    animation: shoot 9s ease-in-out infinite;
+    animation-delay: 2.8s;
+  }
+
+  .star-3 {
+    top: 5%;
+    left: 45%;
+    width: 90px;
+    animation: shoot 6.5s ease-in-out infinite;
+    animation-delay: 4.2s;
+  }
+
+  .star-4 {
+    top: 40%;
+    left: 88%;
+    width: 140px;
+    animation: shoot 8s ease-in-out infinite;
+    animation-delay: 5.7s;
+  }
+
+  .star-5 {
+    top: 15%;
+    left: 60%;
+    width: 110px;
+    animation: shoot 10s ease-in-out infinite;
+    animation-delay: 7.4s;
+  }
+
+  @keyframes shoot {
+    0% {
+      opacity: 0;
+      transform: translate3d(0, 0, 0) rotate(-40deg);
+    }
+    10% {
+      opacity: 1;
+    }
+    30% {
+      opacity: 0.8;
+      transform: translate3d(-600px, 500px, 0) rotate(-40deg);
+    }
+    35%, 100% {
+      opacity: 0;
+      transform: translate3d(-700px, 600px, 0) rotate(-40deg);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .shooting-stars-container {
+      display: none;
+    }
+  }
+</style>

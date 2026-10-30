@@ -1,0 +1,427 @@
+---
+---
+
+<!-- Cyber Scroll Depth Telemetry Bar at Top of Viewport -->
+<div id="scroll-telemetry-bar" class="scroll-telemetry-bar" aria-hidden="true">
+  <div class="telemetry-beam"></div>
+  <div class="telemetry-head"></div>
+</div>
+
+<!-- Precision Cyber Reticle Cursor Follower -->
+<div id="cyber-reticle-cursor" class="cyber-reticle" aria-hidden="true">
+  <div class="reticle-core"></div>
+  <div class="reticle-ring"></div>
+  <div class="reticle-bracket top-left"></div>
+  <div class="reticle-bracket top-right"></div>
+  <div class="reticle-bracket bottom-left"></div>
+  <div class="reticle-bracket bottom-right"></div>
+</div>
+
+<script>
+  function setupInteractiveEffects() {
+    const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+    // 1. Scroll-triggered reveal animations with zero scroll overhead
+    const revealElements = document.querySelectorAll('.section, .glass-card, .snapshot-card, .banner-box');
+    
+    if ('IntersectionObserver' in window && !isReducedMotion) {
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('element-revealed');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.08,
+        rootMargin: '0px 0px -40px 0px'
+      });
+
+      revealElements.forEach((el) => {
+        if (!el.classList.contains('element-revealed')) {
+          el.classList.add('reveal-prep');
+          revealObserver.observe(el);
+        }
+      });
+    } else {
+      revealElements.forEach((el) => el.classList.add('element-revealed'));
+    }
+
+    // 2. Dynamic Number Counter Roll (Counts up smoothly when scrolled into view)
+    const counterElements = document.querySelectorAll<HTMLElement>('[data-counter-target]');
+    if ('IntersectionObserver' in window && !isReducedMotion) {
+      const counterObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const el = entry.target as HTMLElement;
+            const targetStr = el.dataset.counterTarget || '';
+            const targetNum = parseFloat(targetStr);
+            const prefix = el.dataset.counterPrefix || '';
+            const suffix = el.dataset.counterSuffix || '';
+            const isFloat = targetStr.includes('.');
+            
+            if (!isNaN(targetNum)) {
+              let start = 0;
+              const duration = 1200; // ms
+              const startTime = performance.now();
+
+              function animateCounter(now: number) {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                // Ease out expo
+                const easeOut = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                const current = start + (targetNum - start) * easeOut;
+                
+                el.textContent = `${prefix}${isFloat ? current.toFixed(1) : Math.round(current)}${suffix}`;
+                
+                if (progress < 1) {
+                  requestAnimationFrame(animateCounter);
+                } else {
+                  el.textContent = `${prefix}${targetStr}${suffix}`;
+                }
+              }
+
+              requestAnimationFrame(animateCounter);
+            }
+            observer.unobserve(el);
+          }
+        });
+      }, { threshold: 0.2 });
+
+      counterElements.forEach((el) => counterObserver.observe(el));
+    }
+
+    // 3. Scroll Depth Telemetry Bar
+    const telemetryBar = document.getElementById('scroll-telemetry-bar');
+    if (telemetryBar) {
+      let ticking = false;
+      function updateScrollProgress() {
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+        telemetryBar?.style.setProperty('--scroll-progress', `${progress}%`);
+        ticking = false;
+      }
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          requestAnimationFrame(updateScrollProgress);
+          ticking = true;
+        }
+      }, { passive: true });
+      updateScrollProgress();
+    }
+
+    // 4. Desktop Precision Cyber Reticle Cursor Follower
+    const cursor = document.getElementById('cyber-reticle-cursor');
+    if (cursor && isFinePointer && !isReducedMotion && window.innerWidth > 960) {
+      let mouseX = -100;
+      let mouseY = -100;
+      let currentX = -100;
+      let currentY = -100;
+      let isVisible = false;
+      let rafCursor: number | null = null;
+
+      function renderCursor() {
+        // Smooth Lerp factor
+        currentX += (mouseX - currentX) * 0.2;
+        currentY += (mouseY - currentY) * 0.2;
+
+        cursor.style.transform = `translate3d(${currentX}px, ${currentY}px, 0)`;
+
+        if (isVisible) {
+          rafCursor = requestAnimationFrame(renderCursor);
+        }
+      }
+
+      const onMouseMove = (e: MouseEvent) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
+        if (!isVisible) {
+          isVisible = true;
+          cursor.style.opacity = '1';
+          rafCursor = requestAnimationFrame(renderCursor);
+        }
+      };
+
+      const onMouseLeave = () => {
+        isVisible = false;
+        cursor.style.opacity = '0';
+        if (rafCursor) cancelAnimationFrame(rafCursor);
+      };
+
+      window.addEventListener('mousemove', onMouseMove, { passive: true });
+      document.addEventListener('mouseleave', onMouseLeave);
+
+      // Interactive hover targets expand the cursor reticle
+      const interactiveTargets = document.querySelectorAll('a, button, .project-card, .glass-card, .filter-tab, .cyber-badge, .social-icon-btn, .skill-chip');
+      interactiveTargets.forEach((target) => {
+        target.addEventListener('mouseenter', () => {
+          cursor.classList.add('reticle-active');
+        }, { passive: true });
+        target.addEventListener('mouseleave', () => {
+          cursor.classList.remove('reticle-active');
+        }, { passive: true });
+      });
+    } else if (cursor) {
+      cursor.style.display = 'none';
+    }
+
+    // 5. 3D Holographic Card Physics + Specular Light Reflection
+    const dynamicCards = document.querySelectorAll<HTMLElement>('.project-card, .profile-hero-card, .skill-category-card, .post-card, .snapshot-card');
+    
+    if (isFinePointer && !isReducedMotion && window.innerWidth > 960) {
+      dynamicCards.forEach((card) => {
+        let isHovered = false;
+        let rafId: number | null = null;
+        let targetX = 0;
+        let targetY = 0;
+        let currentX = 0;
+        let currentY = 0;
+
+        function updateTilt() {
+          if (!isHovered) {
+            card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translate3d(0, 0, 0)';
+            return;
+          }
+
+          // Smooth lerp for weightless physical response
+          currentX += (targetX - currentX) * 0.16;
+          currentY += (targetY - currentY) * 0.16;
+
+          card.style.transform = `perspective(1000px) rotateX(${currentX}deg) rotateY(${currentY}deg) translate3d(0, -6px, 12px)`;
+          rafId = requestAnimationFrame(updateTilt);
+        }
+
+        card.addEventListener('mouseenter', () => {
+          isHovered = true;
+          rafId = requestAnimationFrame(updateTilt);
+        }, { passive: true });
+
+        card.addEventListener('mousemove', (e: MouseEvent) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+
+          // Set specular light position custom properties
+          const percentX = (x / rect.width) * 100;
+          const percentY = (y / rect.height) * 100;
+          card.style.setProperty('--mouse-x', `${percentX}%`);
+          card.style.setProperty('--mouse-y', `${percentY}%`);
+
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+
+          targetX = -((y - centerY) / centerY) * 6.5;
+          targetY = ((x - centerX) / centerX) * 6.5;
+        }, { passive: true });
+
+        card.addEventListener('mouseleave', () => {
+          isHovered = false;
+          if (rafId) cancelAnimationFrame(rafId);
+          card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translate3d(0, 0, 0)';
+        }, { passive: true });
+      });
+    }
+
+    // 6. Magnetic Hover Reaction on Primary Glowing Buttons
+    const magneticButtons = document.querySelectorAll<HTMLElement>('.cyber-button.primary');
+    if (isFinePointer && !isReducedMotion && window.innerWidth > 768) {
+      magneticButtons.forEach((btn) => {
+        btn.addEventListener('mousemove', (e: MouseEvent) => {
+          const rect = btn.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          btn.style.transform = `translate3d(${x * 0.24}px, ${y * 0.24}px, 0)`;
+        }, { passive: true });
+
+        btn.addEventListener('mouseleave', () => {
+          btn.style.transform = 'translate3d(0, 0, 0)';
+        }, { passive: true });
+      });
+    }
+  }
+
+  setupInteractiveEffects();
+  document.addEventListener('astro:page-load', setupInteractiveEffects);
+</script>
+
+<style is:global>
+  /* Hardware-accelerated Scroll Reveal Classes */
+  .reveal-prep {
+    opacity: 0;
+    transform: translate3d(0, 24px, 0);
+    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+
+  .element-revealed {
+    opacity: 1 !important;
+    transform: translate3d(0, 0, 0) !important;
+  }
+
+  /* Scroll Depth Telemetry Bar */
+  .scroll-telemetry-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    z-index: 1000;
+    pointer-events: none;
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .telemetry-beam {
+    height: 100%;
+    width: var(--scroll-progress, 0%);
+    background: linear-gradient(90deg, #38bdf8 0%, #818cf8 40%, #f43f5e 75%, #00ff9d 100%);
+    background-size: 200% 100%;
+    animation: telemetryBeam 4s linear infinite;
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.8), 0 0 20px rgba(244, 63, 94, 0.6);
+    transition: width 0.08s ease-out;
+  }
+
+  /* Precision Cyber Reticle Cursor Follower */
+  .cyber-reticle {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 32px;
+    height: 32px;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.25s ease, width 0.25s var(--ease-spring), height 0.25s var(--ease-spring);
+    margin-top: -16px;
+    margin-left: -16px;
+    will-change: transform;
+    transform: translate3d(-100px, -100px, 0);
+  }
+
+  .reticle-core {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--accent-cyan);
+    box-shadow: 0 0 8px var(--accent-cyan);
+    transform: translate(-50%, -50%);
+    transition: transform 0.2s, background-color 0.2s;
+  }
+
+  .reticle-ring {
+    position: absolute;
+    inset: 0;
+    border: 1px dashed rgba(56, 189, 248, 0.5);
+    border-radius: 50%;
+    animation: reticleSpin 8s linear infinite;
+    transition: border-color 0.2s, transform 0.2s;
+  }
+
+  .reticle-bracket {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    border-color: var(--accent-cyan);
+    opacity: 0.7;
+    transition: all 0.2s ease;
+  }
+
+  .reticle-bracket.top-left { top: 0; left: 0; border-top: 1.5px solid; border-left: 1.5px solid; }
+  .reticle-bracket.top-right { top: 0; right: 0; border-top: 1.5px solid; border-right: 1.5px solid; }
+  .reticle-bracket.bottom-left { bottom: 0; left: 0; border-bottom: 1.5px solid; border-left: 1.5px solid; }
+  .reticle-bracket.bottom-right { bottom: 0; right: 0; border-bottom: 1.5px solid; border-right: 1.5px solid; }
+
+  /* Expanded State on Interactive Hover */
+  .cyber-reticle.reticle-active {
+    width: 52px;
+    height: 52px;
+    margin-top: -26px;
+    margin-left: -26px;
+  }
+
+  .cyber-reticle.reticle-active .reticle-ring {
+    border-color: var(--accent-magenta);
+    border-style: solid;
+    border-width: 1.5px;
+    box-shadow: 0 0 14px rgba(244, 63, 94, 0.4);
+  }
+
+  .cyber-reticle.reticle-active .reticle-core {
+    background-color: var(--accent-magenta);
+    box-shadow: 0 0 12px var(--accent-magenta);
+    transform: translate(-50%, -50%) scale(1.4);
+  }
+
+  .cyber-reticle.reticle-active .reticle-bracket {
+    border-color: var(--accent-magenta);
+    opacity: 1;
+  }
+
+  /* Dynamic Specular Holographic Reflection on all Glass Cards */
+  .glass-card {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .glass-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    border-radius: inherit;
+    background: radial-gradient(
+      circle 320px at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(56, 189, 248, 0.16),
+      transparent 70%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 2;
+  }
+
+  .glass-card:hover::after {
+    opacity: 1;
+  }
+
+  /* Laser Border Beam Animation on Special Showcase Cards */
+  .laser-border-beam {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .laser-border-beam::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    padding: 2px;
+    background: conic-gradient(from var(--beam-angle, 0deg) at 50% 50%, transparent 0%, #38bdf8 25%, #f43f5e 50%, #818cf8 75%, transparent 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    animation: beamSpin 6s linear infinite;
+    opacity: 0.85;
+  }
+
+  @property --beam-angle {
+    syntax: '<angle>';
+    inherits: false;
+    initial-value: 0deg;
+  }
+
+  @keyframes beamSpin {
+    from {
+      --beam-angle: 0deg;
+    }
+    to {
+      --beam-angle: 360deg;
+    }
+  }
+</style>

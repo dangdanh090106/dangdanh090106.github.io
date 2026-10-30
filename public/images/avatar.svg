@@ -11,31 +11,62 @@
       <stop offset="100%" stop-color="#ff007f"/>
     </linearGradient>
     <linearGradient id="visorGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#00f7ff" stop-opacity="0.8"/>
-      <stop offset="50%" stop-color="#3b82f6" stop-opacity="0.9"/>
-      <stop offset="100%" stop-color="#ff007f" stop-opacity="0.8"/>
+      <stop offset="0%" stop-color="#00f7ff" stop-opacity="0.85"/>
+      <stop offset="50%" stop-color="#3b82f6" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#ff007f" stop-opacity="0.85"/>
     </linearGradient>
     <filter id="cyberGlow" x="-20%" y="-20%" width="140%" height="140%">
-      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feGaussianBlur stdDeviation="3.5" result="blur"/>
       <feMerge>
         <feMergeNode in="blur"/>
         <feMergeNode in="SourceGraphic"/>
       </feMerge>
     </filter>
+
+    <style>
+      @keyframes pulseRing {
+        0%, 100% { stroke-opacity: 0.5; stroke-width: 2px; }
+        50% { stroke-opacity: 1; stroke-width: 3.5px; filter: drop-shadow(0 0 8px #00f7ff); }
+      }
+      @keyframes scanline {
+        0% { transform: translateY(0px); opacity: 0.2; }
+        50% { transform: translateY(22px); opacity: 1; }
+        100% { transform: translateY(0px); opacity: 0.2; }
+      }
+      @keyframes nodeBlink {
+        0%, 100% { opacity: 0.4; transform: scale(0.9); }
+        50% { opacity: 1; transform: scale(1.3); filter: drop-shadow(0 0 6px #00f7ff); }
+      }
+      @keyframes orbitFloat {
+        0% { transform: rotate(0deg) translate(14px) rotate(0deg); }
+        100% { transform: rotate(360deg) translate(14px) rotate(-360deg); }
+      }
+      .anim-ring { animation: pulseRing 3.5s ease-in-out infinite; }
+      .anim-scan { animation: scanline 2.2s ease-in-out infinite; }
+      .anim-node { animation: nodeBlink 2s ease-in-out infinite; transform-origin: center; }
+      .anim-node-2 { animation: nodeBlink 2.5s ease-in-out infinite 0.7s; transform-origin: center; }
+      .anim-orbit { animation: orbitFloat 8s linear infinite; transform-origin: 150px 150px; }
+    </style>
   </defs>
 
   <!-- Outer Border Ring -->
   <rect width="300" height="300" rx="60" fill="url(#avatarBg)"/>
-  <rect x="6" y="6" width="288" height="288" rx="54" fill="none" stroke="url(#neonCyanPink)" stroke-width="2.5" opacity="0.6"/>
+  <rect class="anim-ring" x="6" y="6" width="288" height="288" rx="54" fill="none" stroke="url(#neonCyanPink)" stroke-width="2.5"/>
+
+  <!-- Rotating Orbit Particles -->
+  <g class="anim-orbit">
+    <circle cx="270" cy="80" r="3.5" fill="#00f7ff" filter="url(#cyberGlow)"/>
+    <circle cx="30" cy="220" r="3" fill="#ff007f" filter="url(#cyberGlow)"/>
+  </g>
 
   <!-- Background Cyber Circuit Grid -->
-  <g opacity="0.18" stroke="#00f7ff" stroke-width="1.2">
+  <g opacity="0.25" stroke="#00f7ff" stroke-width="1.2">
     <path d="M 40,60 L 90,60 L 110,80 L 190,80 L 210,60 L 260,60" fill="none"/>
     <path d="M 30,240 L 80,240 L 100,220 L 200,220 L 220,240 L 270,240" fill="none"/>
-    <circle cx="90" cy="60" r="3" fill="#00f7ff"/>
-    <circle cx="210" cy="60" r="3" fill="#ff007f"/>
-    <circle cx="80" cy="240" r="3" fill="#00ff9d"/>
-    <circle cx="220" cy="240" r="3" fill="#a855f7"/>
+    <circle class="anim-node" cx="90" cy="60" r="3.5" fill="#00f7ff"/>
+    <circle class="anim-node-2" cx="210" cy="60" r="3.5" fill="#ff007f"/>
+    <circle class="anim-node-2" cx="80" cy="240" r="3.5" fill="#00ff9d"/>
+    <circle class="anim-node" cx="220" cy="240" r="3.5" fill="#a855f7"/>
   </g>
 
   <!-- Stylized Cyber Silhouette -->
@@ -48,17 +79,21 @@
   <rect x="135" y="165" width="30" height="35" rx="6" fill="#141d3b"/>
 
   <!-- Head / Face Structure -->
-  <path d="M 105,125 C 105,75 125,55 150,55 C 175,55 195,75 195,125 C 195,160 178,180 150,180 C 122,180 105,160 105,125 Z" fill="#162042" stroke="rgba(255,255,255,0.15)" stroke-width="1.5"/>
+  <path d="M 105,125 C 105,75 125,55 150,55 C 175,55 195,75 195,125 C 195,160 178,180 150,180 C 122,180 105,160 105,125 Z" fill="#162042" stroke="rgba(255,255,255,0.2)" stroke-width="1.5"/>
 
   <!-- Futuristic Cyber Hair Cut -->
   <path d="M 100,115 C 95,80 115,50 150,45 C 185,50 205,80 200,115 C 190,75 180,62 150,62 C 120,62 110,75 100,115 Z" fill="url(#neonCyanPink)"/>
 
-  <!-- Holographic Cyber Visor / Smart Headset -->
+  <!-- Holographic Cyber Visor -->
   <polygon points="108,110 192,110 185,135 115,135" fill="url(#visorGrad)" filter="url(#cyberGlow)"/>
-  <line x1="110" y1="122" x2="190" y2="122" stroke="#ffffff" stroke-width="1.5" opacity="0.9"/>
-  <circle cx="150" cy="122" r="3" fill="#ffffff" filter="url(#cyberGlow)"/>
+  
+  <!-- Animated Visor Scanline -->
+  <g class="anim-scan">
+    <line x1="110" y1="112" x2="190" y2="112" stroke="#ffffff" stroke-width="1.8" filter="url(#cyberGlow)"/>
+  </g>
+  <circle cx="150" cy="122" r="3.5" fill="#ffffff" filter="url(#cyberGlow)"/>
 
-  <!-- Cyber Ear Piece / Neural Jack -->
+  <!-- Cyber Ear Pieces -->
   <rect x="98" y="120" width="8" height="18" rx="3" fill="#00f7ff" filter="url(#cyberGlow)"/>
   <rect x="194" y="120" width="8" height="18" rx="3" fill="#ff007f" filter="url(#cyberGlow)"/>
 

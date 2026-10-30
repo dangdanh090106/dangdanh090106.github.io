@@ -1,67 +1,113 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 420" width="800" height="420">
   <defs>
     <linearGradient id="bgAstro" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#03050c"/>
-      <stop offset="50%" stop-color="#0a1024"/>
-      <stop offset="100%" stop-color="#140a24"/>
+      <stop offset="0%" stop-color="#04060d"/>
+      <stop offset="50%" stop-color="#0a1026"/>
+      <stop offset="100%" stop-color="#140a26"/>
     </linearGradient>
     <linearGradient id="astroGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#ff007f"/>
-      <stop offset="50%" stop-color="#a855f7"/>
-      <stop offset="100%" stop-color="#00f7ff"/>
+      <stop offset="0%" stop-color="#f43f5e"/>
+      <stop offset="50%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#38bdf8"/>
     </linearGradient>
+    <linearGradient id="flameGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="30%" stop-color="#fbbf24"/>
+      <stop offset="70%" stop-color="#f43f5e"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </linearGradient>
+    <filter id="astroGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <style>
+      @keyframes flameThrust {
+        0%, 100% { transform: scaleY(0.85) scaleX(0.9); opacity: 0.85; }
+        50% { transform: scaleY(1.35) scaleX(1.1); opacity: 1; filter: drop-shadow(0 0 15px #f43f5e); }
+      }
+      @keyframes floatIsland1 {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-8px); }
+      }
+      @keyframes floatIsland2 {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(8px); }
+      }
+      @keyframes orbitStarfield {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      @keyframes twinkleStar {
+        0%, 100% { opacity: 0.3; transform: scale(0.8); }
+        50% { opacity: 1; transform: scale(1.3); }
+      }
+
+      .flame-anim { animation: flameThrust 0.6s ease-in-out infinite alternate; transform-origin: top; }
+      .island-1 { animation: floatIsland1 4s ease-in-out infinite; }
+      .island-2 { animation: floatIsland2 4.5s ease-in-out infinite 0.5s; }
+      .island-3 { animation: floatIsland1 5s ease-in-out infinite 1s; }
+      .orbit-stars { animation: orbitStarfield 30s linear infinite; transform-origin: 400px 200px; }
+      .twinkle-1 { animation: twinkleStar 2s ease-in-out infinite; }
+      .twinkle-2 { animation: twinkleStar 2.6s ease-in-out infinite 0.8s; }
+    </style>
   </defs>
 
   <rect width="800" height="420" fill="url(#bgAstro)"/>
 
-  <!-- Matrix Stars -->
-  <g fill="#ffffff" opacity="0.4">
-    <circle cx="80" cy="70" r="1.5"/>
-    <circle cx="150" cy="190" r="1.2"/>
-    <circle cx="280" cy="90" r="2"/>
-    <circle cx="430" cy="60" r="1.5"/>
-    <circle cx="680" cy="100" r="2.5"/>
-    <circle cx="730" cy="220" r="1.2"/>
-    <circle cx="620" cy="330" r="2"/>
-    <circle cx="180" cy="340" r="1.8"/>
+  <!-- Orbiting Star Field -->
+  <g class="orbit-stars" fill="#ffffff">
+    <circle class="twinkle-1" cx="120" cy="80" r="2" opacity="0.8"/>
+    <circle class="twinkle-2" cx="240" cy="340" r="1.5" opacity="0.6"/>
+    <circle class="twinkle-1" cx="680" cy="110" r="2.5" opacity="0.9"/>
+    <circle class="twinkle-2" cx="620" cy="330" r="1.8" opacity="0.7"/>
+    <circle cx="280" cy="90" r="1.5" opacity="0.5"/>
+    <circle cx="530" cy="70" r="1.5" opacity="0.5"/>
   </g>
 
-  <!-- Central Rocket / Core Icon Motif -->
-  <g transform="translate(400, 190)">
-    <circle cx="0" cy="0" r="95" fill="none" stroke="rgba(0, 247, 255, 0.25)" stroke-dasharray="6 6"/>
-    <circle cx="0" cy="0" r="65" fill="none" stroke="url(#astroGrad)" stroke-width="2"/>
+  <!-- Central Rocket Orbit Ring -->
+  <g transform="translate(400, 200)">
+    <circle cx="0" cy="0" r="105" fill="none" stroke="rgba(56, 189, 248, 0.25)" stroke-dasharray="8 6" stroke-width="1.5"/>
+    <circle cx="0" cy="0" r="75" fill="none" stroke="url(#astroGrad)" stroke-width="2" filter="url(#astroGlow)"/>
     
-    <!-- Stylized Astro Rocket Spark -->
-    <path d="M 0,-45 C 18,-20 22,25 0,40 C -22,25 -18,-20 0,-45 Z" fill="url(#astroGrad)"/>
-    <circle cx="0" cy="-5" r="8" fill="#ffffff"/>
-    <polygon points="-12,20 -28,38 -10,32" fill="#ff007f"/>
-    <polygon points="12,20 28,38 10,32" fill="#00f7ff"/>
+    <!-- Central Astro Rocket Spark -->
+    <path d="M 0,-50 C 20,-24 24,25 0,42 C -24,25 -20,-24 0,-50 Z" fill="url(#astroGrad)" filter="url(#astroGlow)"/>
+    <circle cx="0" cy="-6" r="8.5" fill="#ffffff"/>
+    <polygon points="-14,22 -30,42 -10,34" fill="#f43f5e"/>
+    <polygon points="14,22 30,42 10,34" fill="#38bdf8"/>
+
+    <!-- Dynamic Propulsion Flame -->
+    <g class="flame-anim" transform="translate(0, 42)">
+      <polygon points="0,48 -12,0 12,0" fill="url(#flameGrad)" filter="url(#astroGlow)"/>
+    </g>
   </g>
 
-  <!-- Islands Architecture Cards floating -->
-  <!-- Island 1: Static HTML -->
-  <g transform="translate(140, 130)">
-    <rect width="160" height="85" rx="10" fill="#0c1226" stroke="#00f7ff" stroke-width="1.5"/>
-    <text x="20" y="32" fill="#00f7ff" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold">ISLAND 01</text>
-    <text x="20" y="55" fill="#ffffff" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="bold">Zero JS Default</text>
-    <text x="20" y="72" fill="#8292ab" font-family="'Plus Jakarta Sans', sans-serif" font-size="11">Fast Pure HTML</text>
+  <!-- Island 1: Static HTML Zero JS -->
+  <g class="island-1" transform="translate(110, 140)">
+    <rect width="180" height="95" rx="14" fill="#081024" stroke="#38bdf8" stroke-width="1.8" filter="url(#astroGlow)"/>
+    <text x="20" y="32" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold">ISLAND // 01</text>
+    <text x="20" y="58" fill="#ffffff" font-family="'Outfit', sans-serif" font-size="16" font-weight="bold">Zero JS by Default</text>
+    <text x="20" y="80" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="11">Fast Pre-rendered HTML</text>
   </g>
 
-  <!-- Island 2: Content Collections -->
-  <g transform="translate(500, 130)">
-    <rect width="160" height="85" rx="10" fill="#0c1226" stroke="#a855f7" stroke-width="1.5"/>
-    <text x="20" y="32" fill="#a855f7" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold">CONTENT LAYER</text>
-    <text x="20" y="55" fill="#ffffff" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="bold">Git Markdown</text>
-    <text x="20" y="72" fill="#8292ab" font-family="'Plus Jakarta Sans', sans-serif" font-size="11">Zod Type Safety</text>
+  <!-- Island 2: Content Collections Git-Backed -->
+  <g class="island-2" transform="translate(510, 140)">
+    <rect width="180" height="95" rx="14" fill="#120c24" stroke="#818cf8" stroke-width="1.8" filter="url(#astroGlow)"/>
+    <text x="20" y="32" fill="#818cf8" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold">CONTENT LAYER</text>
+    <text x="20" y="58" fill="#ffffff" font-family="'Outfit', sans-serif" font-size="16" font-weight="bold">Type-Safe Schema</text>
+    <text x="20" y="80" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="11">Zod Markdown Validate</text>
   </g>
 
-  <!-- Island 3: GitHub Actions -->
-  <g transform="translate(320, 310)">
-    <rect width="160" height="65" rx="10" fill="#0c1226" stroke="#ff007f" stroke-width="1.5"/>
-    <text x="80" y="28" fill="#ff007f" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold" text-anchor="middle">CI/CD DEPLOY</text>
-    <text x="80" y="50" fill="#ffffff" font-family="'Plus Jakarta Sans', sans-serif" font-size="13" font-weight="bold" text-anchor="middle">GitHub Pages</text>
+  <!-- Island 3: Sub-second Delivery -->
+  <g class="island-3" transform="translate(300, 315)">
+    <rect width="200" height="75" rx="12" fill="#0c172e" stroke="#00ff9d" stroke-width="1.8" filter="url(#astroGlow)"/>
+    <text x="20" y="28" fill="#00ff9d" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="bold">PERFORMANCE</text>
+    <text x="20" y="52" fill="#ffffff" font-family="'Outfit', sans-serif" font-size="15" font-weight="bold">Lighthouse 100/100</text>
   </g>
 
-  <!-- Title Watermark -->
-  <text x="400" y="50" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-size="20" font-weight="bold" text-anchor="middle" letter-spacing="2">ASTRO 5 + GITHUB PAGES</text>
+  <!-- Header Title -->
+  <text x="400" y="60" fill="#ffffff" font-family="'Outfit', sans-serif" font-size="22" font-weight="800" text-anchor="middle" letter-spacing="2">ASTRO 5 ISLANDS ARCHITECTURE</text>
 </svg>

@@ -2,49 +2,126 @@
   <defs>
     <linearGradient id="bgPort" x1="0%" y1="0%" x2="100%" y2="100%">
       <stop offset="0%" stop-color="#04060d"/>
-      <stop offset="50%" stop-color="#090f22"/>
-      <stop offset="100%" stop-color="#121833"/>
+      <stop offset="50%" stop-color="#091024"/>
+      <stop offset="100%" stop-color="#121835"/>
     </linearGradient>
     <linearGradient id="cyberBorder" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#00f7ff"/>
-      <stop offset="50%" stop-color="#a855f7"/>
-      <stop offset="100%" stop-color="#ff007f"/>
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#f43f5e"/>
     </linearGradient>
+    <linearGradient id="laserGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="transparent"/>
+      <stop offset="50%" stop-color="#38bdf8"/>
+      <stop offset="100%" stop-color="transparent"/>
+    </linearGradient>
+    <filter id="portGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="5" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <style>
+      @keyframes laserScan {
+        0% { transform: translateY(0); opacity: 0; }
+        20% { opacity: 0.8; }
+        80% { opacity: 0.8; }
+        100% { transform: translateY(220px); opacity: 0; }
+      }
+      @keyframes orbitSpinSat {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+      @keyframes orbitSpinReverse {
+        from { transform: rotate(360deg); }
+        to { transform: rotate(0deg); }
+      }
+      @keyframes pulseCoreGlow {
+        0%, 100% { transform: scale(1); filter: drop-shadow(0 0 8px #38bdf8); }
+        50% { transform: scale(1.12); filter: drop-shadow(0 0 20px #f43f5e); }
+      }
+      @keyframes dataStreamPulse {
+        0% { stroke-dashoffset: 60; }
+        100% { stroke-dashoffset: 0; }
+      }
+
+      .laser-sweep-bar { animation: laserScan 3.5s cubic-bezier(0.4, 0, 0.2, 1) infinite; }
+      .orbit-1 { animation: orbitSpinSat 12s linear infinite; transform-origin: 430px 190px; }
+      .orbit-2 { animation: orbitSpinReverse 18s linear infinite; transform-origin: 430px 190px; }
+      .pulse-satellite { animation: pulseCoreGlow 3s ease-in-out infinite; transform-origin: 430px 190px; }
+      .stream-line { stroke-dasharray: 6 4; animation: dataStreamPulse 1.5s linear infinite; }
+    </style>
   </defs>
 
   <rect width="600" height="360" fill="url(#bgPort)"/>
 
+  <!-- Matrix Dot Field -->
+  <g opacity="0.15" fill="#38bdf8">
+    <circle cx="80" cy="50" r="1.5"/><circle cx="160" cy="50" r="1.5"/><circle cx="240" cy="50" r="1.5"/>
+    <circle cx="320" cy="50" r="1.5"/><circle cx="400" cy="50" r="1.5"/><circle cx="480" cy="50" r="1.5"/>
+    <circle cx="80" cy="310" r="1.5"/><circle cx="160" cy="310" r="1.5"/><circle cx="240" cy="310" r="1.5"/>
+  </g>
+
   <!-- Browser / UI Window Frame Mockup -->
-  <rect x="70" y="45" width="460" height="270" rx="14" fill="#080c1a" stroke="url(#cyberBorder)" stroke-width="2"/>
+  <rect x="65" y="40" width="470" height="280" rx="14" fill="#080e1e" stroke="url(#cyberBorder)" stroke-width="1.8" filter="url(#portGlow)"/>
   
   <!-- Window Header -->
-  <path d="M 70,59 C 70,51 76,45 84,45 L 516,45 C 524,45 530,51 530,59 L 530,78 L 70,78 Z" fill="#0c1226"/>
-  <circle cx="95" cy="62" r="5" fill="#ef4444"/>
-  <circle cx="112" cy="62" r="5" fill="#f59e0b"/>
-  <circle cx="129" cy="62" r="5" fill="#10b981"/>
+  <path d="M 65,54 C 65,46 71,40 79,40 L 521,40 C 529,40 535,46 535,54 L 535,74 L 65,74 Z" fill="#0e172e"/>
+  <circle cx="90" cy="57" r="4.5" fill="#f43f5e"/>
+  <circle cx="106" cy="57" r="4.5" fill="#fbbf24"/>
+  <circle cx="122" cy="57" r="4.5" fill="#10b981"/>
 
-  <rect x="160" y="54" width="280" height="16" rx="4" fill="#04060d" stroke="rgba(255,255,255,0.1)"/>
-  <text x="300" y="66" fill="#8292ab" font-family="'JetBrains Mono', monospace" font-size="10" text-anchor="middle">dangdanh090106.github.io</text>
+  <rect x="155" y="49" width="290" height="16" rx="4" fill="#04060d" stroke="rgba(255,255,255,0.08)"/>
+  <text x="300" y="61" fill="#94a3b8" font-family="'JetBrains Mono', monospace" font-size="10" text-anchor="middle">https://dangdanh090106.github.io</text>
 
-  <!-- Cyber Web Elements -->
-  <!-- Header Bar Inside -->
-  <line x1="100" y1="105" x2="180" y2="105" stroke="#00f7ff" stroke-width="6" stroke-linecap="round"/>
-  <line x1="390" y1="105" x2="420" y2="105" stroke="#8292ab" stroke-width="4" stroke-linecap="round"/>
-  <line x1="435" y1="105" x2="465" y2="105" stroke="#8292ab" stroke-width="4" stroke-linecap="round"/>
-  <line x1="480" y1="105" x2="500" y2="105" stroke="#00f7ff" stroke-width="4" stroke-linecap="round"/>
+  <!-- Laser Scanline Sweeping through Window -->
+  <g class="laser-sweep-bar">
+    <line x1="67" y1="80" x2="533" y2="80" stroke="url(#laserGrad)" stroke-width="2.5" filter="url(#portGlow)"/>
+  </g>
 
-  <!-- Hero Content inside frame -->
-  <line x1="100" y1="145" x2="260" y2="145" stroke="#ffffff" stroke-width="12" stroke-linecap="round"/>
-  <line x1="100" y1="168" x2="310" y2="168" stroke="url(#cyberBorder)" stroke-width="14" stroke-linecap="round"/>
-  <line x1="100" y1="195" x2="330" y2="195" stroke="#8292ab" stroke-width="5" stroke-linecap="round"/>
-  <line x1="100" y1="210" x2="280" y2="210" stroke="#8292ab" stroke-width="5" stroke-linecap="round"/>
+  <!-- Content Section Inside Browser Window -->
+  <!-- Navigation Wireframe -->
+  <line x1="95" y1="100" x2="165" y2="100" stroke="#38bdf8" stroke-width="5" stroke-linecap="round"/>
+  <line x1="390" y1="100" x2="420" y2="100" stroke="#64748b" stroke-width="3" stroke-linecap="round"/>
+  <line x1="435" y1="100" x2="465" y2="100" stroke="#64748b" stroke-width="3" stroke-linecap="round"/>
+  <line x1="480" y1="100" x2="505" y2="100" stroke="#38bdf8" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Left Side: Hero Typography wireframes -->
+  <line x1="95" y1="135" x2="250" y2="135" stroke="#ffffff" stroke-width="10" stroke-linecap="round"/>
+  <line x1="95" y1="155" x2="300" y2="155" stroke="url(#cyberBorder)" stroke-width="12" stroke-linecap="round"/>
+  <line x1="95" y1="180" x2="280" y2="180" stroke="#64748b" stroke-width="4" stroke-linecap="round"/>
+  <line x1="95" y1="195" x2="240" y2="195" stroke="#64748b" stroke-width="4" stroke-linecap="round"/>
 
   <!-- Buttons inside frame -->
-  <rect x="100" y="235" width="85" height="28" rx="6" fill="#00f7ff"/>
-  <rect x="195" y="235" width="85" height="28" rx="6" fill="#141c38" stroke="#00f7ff"/>
+  <rect x="95" y="220" width="90" height="26" rx="6" fill="#38bdf8"/>
+  <rect x="195" y="220" width="75" height="26" rx="6" fill="#15213b" stroke="rgba(255,255,255,0.15)"/>
 
-  <!-- Holographic Core Visual on right side of frame -->
-  <circle cx="430" cy="190" r="55" fill="none" stroke="rgba(0, 247, 255, 0.4)" stroke-dasharray="4 4"/>
-  <circle cx="430" cy="190" r="35" fill="none" stroke="rgba(255, 0, 127, 0.5)"/>
-  <circle cx="430" cy="190" r="18" fill="url(#cyberBorder)"/>
+  <!-- Mini cards at bottom wireframe -->
+  <rect x="95" y="265" width="60" height="32" rx="6" fill="#0e172e" stroke="rgba(56, 189, 248, 0.25)"/>
+  <rect x="165" y="265" width="60" height="32" rx="6" fill="#0e172e" stroke="rgba(129, 140, 248, 0.25)"/>
+  <rect x="235" y="265" width="60" height="32" rx="6" fill="#0e172e" stroke="rgba(244, 63, 94, 0.25)"/>
+
+  <!-- Connecting Data Stream Line -->
+  <path class="stream-line" d="M 280,233 C 330,233 360,190 395,190" fill="none" stroke="#38bdf8" stroke-width="2"/>
+
+  <!-- Right Side: Interactive 3D Cyber Core & Orbiting Rings -->
+  <!-- Outer Rotating Orbit 1 -->
+  <g class="orbit-1">
+    <ellipse cx="430" cy="190" rx="55" ry="55" fill="none" stroke="rgba(56, 189, 248, 0.4)" stroke-width="1.5" stroke-dasharray="10 5"/>
+    <circle cx="485" cy="190" r="4" fill="#38bdf8" filter="url(#portGlow)"/>
+  </g>
+
+  <!-- Reverse Orbit 2 -->
+  <g class="orbit-2">
+    <ellipse cx="430" cy="190" rx="40" ry="22" fill="none" stroke="rgba(244, 63, 94, 0.45)" stroke-width="1.5"/>
+    <circle cx="390" cy="190" r="3.5" fill="#f43f5e" filter="url(#portGlow)"/>
+  </g>
+
+  <!-- Pulsing Central Cyber Core -->
+  <g class="pulse-satellite">
+    <circle cx="430" cy="190" r="16" fill="#0e172e" stroke="url(#cyberBorder)" stroke-width="2"/>
+    <circle cx="430" cy="190" r="7" fill="#38bdf8" filter="url(#portGlow)"/>
+  </g>
 </svg>

@@ -30,11 +30,16 @@ const statusColorMap = {
 };
 ---
 
-<article class={`project-card glass-card ${featured ? 'featured' : ''}`}>
+<article class={`project-card glass-card ${featured ? 'featured laser-border-beam' : ''}`}>
   {cover && (
     <div class="card-thumb-wrap">
       <img src={cover} alt={title} loading="lazy" class="card-thumb-img" />
       <div class="thumb-overlay"></div>
+      <div class="thumb-scanline" aria-hidden="true"></div>
+      <div class="thumb-bracket tl" aria-hidden="true"></div>
+      <div class="thumb-bracket tr" aria-hidden="true"></div>
+      <div class="thumb-bracket bl" aria-hidden="true"></div>
+      <div class="thumb-bracket br" aria-hidden="true"></div>
     </div>
   )}
 
@@ -122,6 +127,46 @@ const statusColorMap = {
     inset: 0;
     background: linear-gradient(180deg, transparent 40%, rgba(8, 12, 26, 0.7) 100%);
     pointer-events: none;
+  }
+
+  /* Holographic Scanline & Targeting Brackets */
+  .thumb-scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #38bdf8, #f43f5e, transparent);
+    box-shadow: 0 0 10px #38bdf8;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .project-card:hover .thumb-scanline {
+    opacity: 0.85;
+    animation: hudScan 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  .thumb-bracket {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: var(--accent-cyan);
+    opacity: 0;
+    transition: all 0.3s var(--ease-spring);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .thumb-bracket.tl { top: 6px; left: 6px; border-top: 2px solid; border-left: 2px solid; transform: translate3d(-3px, -3px, 0); }
+  .thumb-bracket.tr { top: 6px; right: 6px; border-top: 2px solid; border-right: 2px solid; transform: translate3d(3px, -3px, 0); }
+  .thumb-bracket.bl { bottom: 6px; left: 6px; border-bottom: 2px solid; border-left: 2px solid; transform: translate3d(-3px, 3px, 0); }
+  .thumb-bracket.br { bottom: 6px; right: 6px; border-bottom: 2px solid; border-right: 2px solid; transform: translate3d(3px, 3px, 0); }
+
+  .project-card:hover .thumb-bracket {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
 
   .card-meta {

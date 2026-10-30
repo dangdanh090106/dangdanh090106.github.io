@@ -14,7 +14,7 @@ import ParticleField from './effects/ParticleField.astro';
       <div class="hero-capsule-wrapper">
         <div class="hero-capsule">
           <span class="capsule-pulse"></span>
-          <span class="capsule-text">KỸ SƯ PHẦN MỀM &amp; PHÁT TRIỂN AI</span>
+          <span id="hero-dynamic-capsule" class="capsule-text">KỸ SƯ PHẦN MỀM &amp; PHÁT TRIỂN AI</span>
           <span class="capsule-arrow">✦</span>
         </div>
       </div>
@@ -58,27 +58,33 @@ import ParticleField from './effects/ParticleField.astro';
       <!-- Quick Signals -->
       <div class="hero-signals">
         <div class="signal-item">
-          <span class="signal-value gradient-val">100%</span>
+          <span class="signal-value gradient-val" data-counter-target="100" data-counter-suffix="%">100%</span>
           <span class="signal-label">Static &amp; Mượt mà</span>
         </div>
         <div class="signal-sep"></div>
         <div class="signal-item">
-          <span class="signal-value cyan-val">Astro 5</span>
-          <span class="signal-label">Kiến trúc Tối ưu</span>
+          <span class="signal-value cyan-val" data-counter-target="0.3" data-counter-suffix="s">0.3s</span>
+          <span class="signal-label">Tốc độ Tải trang</span>
         </div>
         <div class="signal-sep"></div>
         <div class="signal-item">
-          <span class="signal-value magenta-val">Git-Ops</span>
-          <span class="signal-label">Triển khai Tự động</span>
+          <span class="signal-value magenta-val" data-counter-target="99.9" data-counter-suffix="%">99.9%</span>
+          <span class="signal-label">Uptime &amp; Tin cậy</span>
         </div>
       </div>
     </div>
 
     <!-- Personal Profile Showcase Card -->
     <div class="hero-visual">
-      <div class="profile-hero-card glass-card">
+      <div class="profile-hero-card glass-card laser-border-beam">
         <!-- Ambient internal glow core -->
         <div class="card-ambient-glow"></div>
+
+        <!-- HUD Corner Tech Brackets -->
+        <div class="hud-bracket bracket-tl" aria-hidden="true"></div>
+        <div class="hud-bracket bracket-tr" aria-hidden="true"></div>
+        <div class="hud-bracket bracket-bl" aria-hidden="true"></div>
+        <div class="hud-bracket bracket-br" aria-hidden="true"></div>
 
         <div class="card-header">
           <div class="card-status-indicator">
@@ -91,6 +97,8 @@ import ParticleField from './effects/ParticleField.astro';
         <div class="card-profile-section">
           <div class="avatar-container">
             <div class="avatar-ring-glow"></div>
+            <!-- Dynamic Orbit Telemetry Ring -->
+            <div class="avatar-orbit-telemetry" aria-hidden="true"></div>
             <img
               src="/images/avatar.svg"
               alt="Chân dung Đặng Danh"
@@ -99,6 +107,11 @@ import ParticleField from './effects/ParticleField.astro';
               height="130"
               loading="eager"
             />
+            <!-- Floating Holographic Chip Badge -->
+            <div class="floating-chip-badge" aria-hidden="true">
+              <span class="chip-pulse"></span>
+              <span>CORE v5.2</span>
+            </div>
           </div>
 
           <div class="profile-details">
@@ -107,6 +120,30 @@ import ParticleField from './effects/ParticleField.astro';
             <p class="profile-bio">
               Đam mê kết hợp vẻ đẹp của thiết kế tương tác với sức mạnh tính toán của các mô hình AI tự hành.
             </p>
+          </div>
+        </div>
+
+        <!-- Live Audio / Signal Frequency Spectrum Visualizer -->
+        <div class="card-frequency-spectrum" aria-hidden="true">
+          <div class="spectrum-info">
+            <span class="spectrum-label">CORE FREQ // 60 FPS</span>
+            <span class="spectrum-status">ACTIVE</span>
+          </div>
+          <div class="spectrum-bars">
+            <span class="spec-bar bar-1"></span>
+            <span class="spec-bar bar-2"></span>
+            <span class="spec-bar bar-3"></span>
+            <span class="spec-bar bar-4"></span>
+            <span class="spec-bar bar-5"></span>
+            <span class="spec-bar bar-6"></span>
+            <span class="spec-bar bar-7"></span>
+            <span class="spec-bar bar-8"></span>
+            <span class="spec-bar bar-9"></span>
+            <span class="spec-bar bar-10"></span>
+            <span class="spec-bar bar-11"></span>
+            <span class="spec-bar bar-12"></span>
+            <span class="spec-bar bar-13"></span>
+            <span class="spec-bar bar-14"></span>
           </div>
         </div>
 
@@ -538,6 +575,120 @@ import ParticleField from './effects/ParticleField.astro';
     color: #04060d;
   }
 
+  /* HUD Corner Tech Brackets */
+  .hud-bracket {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0.75;
+    animation: hudBracketPulse 4s ease-in-out infinite;
+  }
+
+  .bracket-tl { top: 8px; left: 8px; border-top: 2px solid var(--accent-cyan); border-left: 2px solid var(--accent-cyan); }
+  .bracket-tr { top: 8px; right: 8px; border-top: 2px solid var(--accent-cyan); border-right: 2px solid var(--accent-cyan); }
+  .bracket-bl { bottom: 8px; left: 8px; border-bottom: 2px solid var(--accent-magenta); border-left: 2px solid var(--accent-magenta); }
+  .bracket-br { bottom: 8px; right: 8px; border-bottom: 2px solid var(--accent-magenta); border-right: 2px solid var(--accent-magenta); }
+
+  /* Orbit Telemetry Ring */
+  .avatar-orbit-telemetry {
+    position: absolute;
+    inset: -12px;
+    border-radius: 36px;
+    border: 1.5px dashed rgba(56, 189, 248, 0.4);
+    animation: orbitSpin 24s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Floating Holographic Chip Badge */
+  .floating-chip-badge {
+    position: absolute;
+    bottom: -6px;
+    right: -8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.2rem 0.55rem;
+    background: #040816;
+    border: 1px solid var(--accent-cyan);
+    border-radius: var(--radius-full);
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    font-weight: 700;
+    color: var(--accent-cyan);
+    box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
+    z-index: 3;
+    animation: floatGentle 3s ease-in-out infinite alternate;
+  }
+
+  .chip-pulse {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background-color: var(--accent-emerald);
+    box-shadow: 0 0 6px var(--accent-emerald);
+  }
+
+  /* Live Audio / Signal Frequency Spectrum Visualizer */
+  .card-frequency-spectrum {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.75rem 1rem;
+    background: rgba(4, 8, 20, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: var(--radius-md);
+  }
+
+  .spectrum-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+  }
+
+  .spectrum-label {
+    color: var(--text-muted);
+    letter-spacing: 0.05em;
+  }
+
+  .spectrum-status {
+    color: var(--accent-emerald);
+    font-weight: 700;
+  }
+
+  .spectrum-bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 4px;
+    height: 24px;
+  }
+
+  .spec-bar {
+    flex: 1;
+    background: linear-gradient(180deg, var(--accent-cyan) 0%, var(--accent-violet) 50%, var(--accent-magenta) 100%);
+    border-radius: 2px;
+    animation: eqLivePulse 1.2s ease-in-out infinite;
+  }
+
+  .bar-1 { animation-delay: 0.05s; }
+  .bar-2 { animation-delay: 0.25s; }
+  .bar-3 { animation-delay: 0.45s; }
+  .bar-4 { animation-delay: 0.15s; }
+  .bar-5 { animation-delay: 0.6s; }
+  .bar-6 { animation-delay: 0.35s; }
+  .bar-7 { animation-delay: 0.1s; }
+  .bar-8 { animation-delay: 0.5s; }
+  .bar-9 { animation-delay: 0.3s; }
+  .bar-10 { animation-delay: 0.7s; }
+  .bar-11 { animation-delay: 0.2s; }
+  .bar-12 { animation-delay: 0.55s; }
+  .bar-13 { animation-delay: 0.4s; }
+  .bar-14 { animation-delay: 0.15s; }
+
   @media (max-width: 960px) {
     .hero-container {
       grid-template-columns: 1fr;
@@ -566,3 +717,40 @@ import ParticleField from './effects/ParticleField.astro';
     }
   }
 </style>
+
+<script>
+  function setupHeroDynamicCapsule() {
+    const capsuleEl = document.getElementById('hero-dynamic-capsule');
+    if (!capsuleEl) return;
+
+    const phrases = [
+      'KỸ SƯ PHẦN MỀM & PHÁT TRIỂN AI',
+      'TỐI ƯU HIỆU NĂNG WEB SIÊU TỐC',
+      'XÂY DỰNG HỆ THỐNG AGENTIC AI',
+      'THIẾT KẾ TRẢI NGHIỆM TƯƠNG TÁC 3D'
+    ];
+
+    let currentIndex = 0;
+    const interval = setInterval(() => {
+      if (document.hidden) return;
+      currentIndex = (currentIndex + 1) % phrases.length;
+      
+      capsuleEl.style.opacity = '0';
+      capsuleEl.style.transform = 'translate3d(0, -4px, 0)';
+      capsuleEl.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
+
+      setTimeout(() => {
+        capsuleEl.textContent = phrases[currentIndex];
+        capsuleEl.style.opacity = '1';
+        capsuleEl.style.transform = 'translate3d(0, 0, 0)';
+      }, 260);
+    }, 3800);
+
+    document.addEventListener('astro:before-swap', () => {
+      clearInterval(interval);
+    }, { once: true });
+  }
+
+  setupHeroDynamicCapsule();
+  document.addEventListener('astro:page-load', setupHeroDynamicCapsule);
+</script>

@@ -24,6 +24,11 @@ const formattedDate = new Intl.DateTimeFormat('vi-VN', {
       <div class="post-thumb-wrap">
         <img src={cover} alt={title} loading="lazy" class="post-thumb-img" />
         <div class="thumb-overlay"></div>
+        <div class="post-scanline" aria-hidden="true"></div>
+        <div class="post-bracket tl" aria-hidden="true"></div>
+        <div class="post-bracket tr" aria-hidden="true"></div>
+        <div class="post-bracket bl" aria-hidden="true"></div>
+        <div class="post-bracket br" aria-hidden="true"></div>
       </div>
     </a>
   )}
@@ -105,6 +110,46 @@ const formattedDate = new Intl.DateTimeFormat('vi-VN', {
     inset: 0;
     background: linear-gradient(180deg, transparent 40%, rgba(8, 12, 26, 0.7) 100%);
     pointer-events: none;
+  }
+
+  /* Holographic Scanline & Targeting Brackets */
+  .post-scanline {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #818cf8, #f43f5e, transparent);
+    box-shadow: 0 0 10px #818cf8;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .post-card:hover .post-scanline {
+    opacity: 0.85;
+    animation: hudScan 2.2s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  }
+
+  .post-bracket {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: var(--accent-violet);
+    opacity: 0;
+    transition: all 0.3s var(--ease-spring);
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .post-bracket.tl { top: 6px; left: 6px; border-top: 2px solid; border-left: 2px solid; transform: translate3d(-3px, -3px, 0); }
+  .post-bracket.tr { top: 6px; right: 6px; border-top: 2px solid; border-right: 2px solid; transform: translate3d(3px, -3px, 0); }
+  .post-bracket.bl { bottom: 6px; left: 6px; border-bottom: 2px solid; border-left: 2px solid; transform: translate3d(-3px, 3px, 0); }
+  .post-bracket.br { bottom: 6px; right: 6px; border-bottom: 2px solid; border-right: 2px solid; transform: translate3d(3px, 3px, 0); }
+
+  .post-card:hover .post-bracket {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
 
   .post-meta {
